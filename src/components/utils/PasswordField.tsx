@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {FormControl, IconButton, Input, InputAdornment, InputLabel} from "@material-ui/core";
-import {Visibility, VisibilityOff} from "@material-ui/icons";
+import {FormControl, IconButton, Input, InputAdornment, InputLabel} from "@mui/material";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 function PasswordField(props: { disabled: boolean, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, label: string }) {
     const [showPassword, setShowPassword] = useState(false)

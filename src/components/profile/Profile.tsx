@@ -8,19 +8,21 @@ import {
     TextField,
     Tooltip,
     Typography,
-} from "@material-ui/core/";
-import {makeStyles} from "@material-ui/core/styles";
-import {Edit, Save, Warning} from "@material-ui/icons";
+} from "@mui/material";
+import {makeStyles, createStyles} from "@mui/styles";
+import {Edit, Save, Warning} from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 import ChangePassword from './ChangePassword'
 import UpdatePhotoButton from './UpdatePhotoButton'
 import useUser from "../../utils/hooks/useUser";
 import getUser from "../../utils/getUser";
 import User from "../../models/User";
-import firebase from "firebase/app";
 import LoadingIndicator from "../utils/LoadingIndicator";
+import {getFirestore} from "firebase/firestore";
+import {sendEmailVerification, updateEmail} from 'firebase/auth'
+import {Theme} from "@mui/material/styles";
 
-const useInfoCardStyles = makeStyles(theme => ({
+const useInfoCardStyles = makeStyles((theme: Theme) => createStyles({
     card: {
         width: '50%',
         [theme.breakpoints.down("sm")]: {
@@ -47,7 +49,7 @@ const ProfileInfoCard = ({children}: { children: any }) => {
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
-        marginLeft: "auto",
+        marginLeft: "auto !important",
     },
 }))
 
@@ -80,7 +82,7 @@ const EditOrSaveButton = ({editing, loading, setEditing, onSaveClick}: EditOrSav
 }
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         display: "flex",
         flexDirection: "column",
@@ -102,7 +104,8 @@ const useStyles = makeStyles(theme => ({
     },
     emailInfoContainer: {
         display: "flex",
-        gap: theme.spacing(2),
+        gap: theme.spacing(1),
+        alignItems: 'center'
     },
     verifyEmailButton: {
         padding: 0
@@ -142,29 +145,30 @@ export default function Profile() {
         return <LoadingIndicator isVisible={true}/>
     }
 
-    const firestore = firebase.firestore()
+    const firestore = getFirestore()
     const updateDisplayName = async () => {
         setIsUpdatingDisplayName(true)
 
-        await firestore.collection("users").doc(user.uid).set({
+        // const docRef = doc(collection(firestore, "users"), user.uid)
+        /* TODO {merge: true}
+        await updateDoc(docRef, {
             displayName: newDisplayName
-        }, {
-            merge: true
-        })
+        })*/
+
         setEditingDisplayName(false)
         setIsUpdatingDisplayName(false)
     }
 
-    const updateEmail = async () => {
+    const doUpdateEmail = async () => {
         setIsUpdatingEmail(true)
         // maybe use verifyBeforeUpdateEmail() ?
-        await user?.updateEmail(newEmail)
+        await updateEmail(user, newEmail)
         setEditingEmail(false)
         setIsUpdatingEmail(false)
     }
 
     const verifyEmail = async () => {
-        await user?.sendEmailVerification()
+        await sendEmailVerification(user)
     }
 
     return (
@@ -222,7 +226,7 @@ export default function Profile() {
                     editing={editingEmail}
                     loading={isUpdatingEmail}
                     setEditing={setEditingEmail}
-                    onSaveClick={updateEmail}
+                    onSaveClick={doUpdateEmail}
                 />
             </ProfileInfoCard>
 

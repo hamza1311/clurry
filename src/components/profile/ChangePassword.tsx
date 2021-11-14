@@ -1,20 +1,20 @@
-import {makeStyles} from "@material-ui/core/styles";
+import {makeStyles, createStyles} from "@mui/styles";
 import React, {lazy, Suspense, useState} from "react";
-import firebase from "firebase";
-import {Button} from "@material-ui/core";
+import {Button} from "@mui/material";
 import PasswordField from "../utils/PasswordField";
-import "firebase/auth"
+import {updatePassword, EmailAuthProvider, reauthenticateWithCredential} from "firebase/auth"
 import useUser from "../../utils/hooks/useUser";
 import LoadingIndicator from "../utils/LoadingIndicator";
+import {Theme} from "@mui/material";
 
-const Dialog = lazy(() => import("@material-ui/core/Dialog"))
-const DialogActions = lazy(() => import("@material-ui/core/DialogActions"))
-const DialogContent = lazy(() => import("@material-ui/core/DialogContent"))
-const DialogTitle = lazy(() => import("@material-ui/core/DialogTitle"))
+const Dialog = lazy(() => import("@mui/material/Dialog"))
+const DialogActions = lazy(() => import("@mui/material/DialogActions"))
+const DialogContent = lazy(() => import("@mui/material/DialogContent"))
+const DialogTitle = lazy(() => import("@mui/material/DialogTitle"))
 
 const Snackbar = lazy(() => import("../utils/Snackbar"))
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         [theme.breakpoints.down("sm")]: {
             marginLeft: "5%",
@@ -63,10 +63,10 @@ export default function ChangePassword({dialogOpen, setDialogOpen}: { dialogOpen
                 throw Error("unreachable")
             }
 
-            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword)
-            await user.reauthenticateWithCredential(credential)
+            const credential = EmailAuthProvider.credential(user.email, oldPassword)
+            await reauthenticateWithCredential(user, credential)
 
-            await user.updatePassword(newPassword)
+            await updatePassword(user, newPassword)
             setSnackbarOpen(true)
         }
         setChangingPassword(false)

@@ -1,6 +1,6 @@
-import {IconButton, SnackbarCloseReason} from "@material-ui/core";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import {IconButton, SnackbarCloseReason} from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import CloseIcon from '@mui/icons-material/Close';
 import React from "react";
 
 function SimpleSnackbar(props: {

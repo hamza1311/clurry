@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
-import firebase from 'firebase/app';
+import  { initializeApp } from 'firebase/app';
 
 
 const firebaseConfig = {
@@ -13,7 +13,7 @@ const firebaseConfig = {
     appId: "1:93755769061:web:d8fd48a6dfd3727c8f540c"
 };
 
-firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>

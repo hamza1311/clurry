@@ -1,9 +1,10 @@
 import React, {ElementType} from "react";
-import {makeStyles} from '@material-ui/core/styles';
+import {Theme} from '@mui/material/styles';
 import {isToday, isYesterday, isThisWeek, isThisYear, getDate, getYear, format} from 'date-fns'
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
+import {makeStyles, createStyles} from "@mui/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         display: "flex",
         alignItems: "center",

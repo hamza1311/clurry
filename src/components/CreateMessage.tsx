@@ -1,18 +1,19 @@
-import {createStyles, makeStyles} from "@material-ui/core/styles";
-import firebase from "firebase";
+import {createStyles, makeStyles} from "@mui/styles";
 import React, {useState} from "react";
-import {TextField} from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import SendIcon from "@material-ui/icons/Send";
+import {TextField} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import SendIcon from "@mui/icons-material/Send";
 import Room from '../models/Room'
+import {addDoc, collection, getFirestore, Timestamp} from "firebase/firestore";
+import {getAuth} from "firebase/auth";
+import {Theme} from "@mui/material/styles";
 
-const useInputStyles = makeStyles(theme => createStyles({
+const useInputStyles = makeStyles((theme: Theme) => createStyles({
     container: {
         alignSelf: 'flex-start',
         margin: theme.spacing("auto", 0, 3, 0),
         width: '100%',
         display: 'flex',
-        alignItems: 'flex-end',
         gap: theme.spacing(2),
         padding: theme.spacing(0, 2),
     },
@@ -24,8 +25,8 @@ const useInputStyles = makeStyles(theme => createStyles({
 export default function CreateMessage({room}: { room: Room }) {
     const classes = useInputStyles()
 
-    const firestore = firebase.firestore()
-    const auth = firebase.auth()
+    const firestore = getFirestore()
+    const auth = getAuth()
 
     const [content, setContent] = useState("")
 
@@ -36,19 +37,19 @@ export default function CreateMessage({room}: { room: Room }) {
         }
 
         const message = {
-            createTime: firebase.firestore.Timestamp.now(),
+            createTime: Timestamp.now(),
             attachments: [],
             author: currentUser.uid,
             content: content
         }
 
-        await firestore.collection(`rooms/${room.id}/messages`).add(message)
+        await addDoc(collection(firestore, `rooms/${room.id}/messages`), message)
         setContent("")
     }
 
     return (
         <div className={classes.container}>
-            <TextField multiline rowsMax={5} className={classes.input} onChange={(e) => setContent(e.target.value)}
+            <TextField multiline maxRows={5} className={classes.input} onChange={(e) => setContent(e.target.value)}
                        value={content}/>
             <IconButton onClick={sendMessage}>
                 <SendIcon/>
@@ -62,7 +63,7 @@ export function CreateMessageSkeleton() {
 
     return (
         <div className={classes.container}>
-            <TextField multiline rowsMax={5} className={classes.input} disabled={true} />
+            <TextField multiline maxRows={5} className={classes.input} disabled={true} />
             <IconButton disabled={true}>
                 <SendIcon/>
             </IconButton>

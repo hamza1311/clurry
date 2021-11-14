@@ -1,21 +1,21 @@
 import {useEffect, useState} from "react";
 import Room from "../../models/Room";
-import firebase from "firebase/app";
-import 'firebase/firestore'
 import useUser from "./useUser";
+import {collection, where, getFirestore, onSnapshot, query} from "firebase/firestore";
 
 const useRooms = () => {
     const [rooms, setRooms] = useState<Room[]>([])
 
     const user = useUser();
     useEffect(() => {
-        const firestore = firebase.firestore();
+        const firestore = getFirestore();
         if (user === null) {
-            return () => {}
+            return () => {
+            }
         }
-        return firestore.collection("rooms")
-            .where('members', 'array-contains', user.uid)
-            .onSnapshot(snapshot => {
+        return onSnapshot(
+            query(collection(firestore, 'rooms'), where('members', 'array-contains', user.uid)),
+            snapshot => {
                 const rooms = snapshot.docs.map(doc => {
                     const data = doc.data()
                     const output: Room = {
@@ -27,7 +27,8 @@ const useRooms = () => {
                     return output
                 })
                 setRooms(rooms)
-            })
+            }
+        )
     }, [user])
 
     return rooms

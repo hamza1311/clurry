@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import {Button, Card, Tabs, Tab, AppBar, Box} from "@material-ui/core";
+import { createStyles, makeStyles } from '@mui/styles';
+import TextField from '@mui/material/TextField';
+import {Button, Card, Tabs, Tab, AppBar, Box} from "@mui/material";
 import LoadingIndicator from "./utils/LoadingIndicator";
 import PasswordField from "./utils/PasswordField";
-import firebase from 'firebase/app'
-import 'firebase/auth'
 import {useHistory} from 'react-router'
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
+import {Theme} from "@mui/material/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         height: '100vh',
         display: 'flex'
@@ -36,13 +36,13 @@ function SignIn() {
     const [password, setPassword] = useState("")
     const [signingIn, setSigningIn] = useState(false)
 
-    const auth = firebase.auth()
+    const auth = getAuth()
     const classes = useStyles();
     const router = useHistory();
 
     const signIn = async () => {
         setSigningIn(true)
-        await auth.signInWithEmailAndPassword(email, password)
+        await signInWithEmailAndPassword(auth, email, password)
         setSigningIn(false)
         router.push("/");
     }
@@ -52,6 +52,7 @@ function SignIn() {
             <TextField
                 label="Email"
                 type="email"
+                variant="standard"
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={signingIn}
             />
@@ -88,12 +89,12 @@ function SignUp() {
 
     const classes = useStyles();
 
-    const auth = firebase.auth();
+    const auth = getAuth();
 
     const signUp = async () => {
         setSigningUp(true)
         if (password === confirmPassword) {
-            await auth.createUserWithEmailAndPassword(email, password)
+            await createUserWithEmailAndPassword(auth, email, password)
         } else {
             alert("password mismatch")
         }

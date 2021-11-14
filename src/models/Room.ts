@@ -1,8 +1,8 @@
-import firebase from "firebase/app";
+import { Timestamp } from 'firebase/firestore'
 
 export default interface Room {
     name: string
-    createTime: firebase.firestore.Timestamp
+    createTime: Timestamp
     members: string[]
     id: string,
 }

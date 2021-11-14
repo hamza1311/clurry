@@ -1,9 +1,9 @@
-import firebase from "firebase/app";
+import { Timestamp } from 'firebase/firestore'
 
 export default interface Message {
     content: string
     attachments: string[]
     author: string
-    createTime: firebase.firestore.Timestamp,
+    createTime: Timestamp,
     id: string,
 }

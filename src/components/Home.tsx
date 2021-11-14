@@ -1,35 +1,35 @@
 import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
-import {createStyles, makeStyles, Theme, useTheme} from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import {createStyles, makeStyles} from '@mui/styles';
+import Drawer from '@mui/material/Drawer';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import {MessageList, MessageListItemSkeleton} from "./MessageList";
 import Room from '../models/Room'
 import CreateMessage, {CreateMessageSkeleton} from './CreateMessage'
 import useRooms from "../utils/hooks/useRooms";
-import {Avatar, Button, Dialog, DialogActions, DialogTitle, Link, Menu, MenuItem, TextField} from "@material-ui/core";
+import {Avatar, Button, Dialog, DialogActions, DialogTitle, Link, Menu, MenuItem, TextField} from "@mui/material";
 import {Link as RouterLink} from 'react-router-dom'
 import {useLocation, useHistory} from 'react-router'
 import useUser from "../utils/hooks/useUser";
-import firebase from "firebase/app";
 import User from "../models/User";
 import getUser from "../utils/getUser";
+import {Timestamp, collection, addDoc, getFirestore} from "firebase/firestore";
+import {getAuth, signOut} from 'firebase/auth'
+import {Theme} from "@mui/material/styles";
 
 const drawerWidth = 240;
 const appBarHeight = 69;
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
         root: {
             display: 'flex',
         },
@@ -48,6 +48,13 @@ const useStyles = makeStyles((theme: Theme) =>
                 duration: theme.transitions.duration.enteringScreen,
             }),
         },
+        roomName: {
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2),
+        },
+        separator: {
+            flex: '1 1 auto',
+        },
         menuButton: {
             marginRight: theme.spacing(2),
         },
@@ -65,8 +72,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: 'flex',
             alignItems: 'center',
             padding: theme.spacing(0, 1),
-            // necessary for content to be below app bar
-            // ...theme.mixins.toolbar,
             justifyContent: 'flex-end',
         },
         content: {
@@ -98,7 +103,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Home() {
     const classes = useStyles();
-    const theme = useTheme();
     const [open, setOpen] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const rooms = useRooms()
@@ -150,9 +154,10 @@ export default function Home() {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap>
+                    <Typography variant="h6" noWrap className={classes.roomName}>
                         {selectedRoom?.name}
                     </Typography>
+                    <div className={classes.separator} />
                     <UserProfileIcon/>
                 </Toolbar>
             </AppBar>
@@ -167,7 +172,7 @@ export default function Home() {
             >
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
+                        <ChevronLeftIcon/>
                     </IconButton>
                 </div>
                 <Divider/>
@@ -219,17 +224,16 @@ function NewRoomDialog() {
     const user = useUser()
 
     const [disabled, setDisabled] = useState(false)
-    const firestore = firebase.firestore()
 
     const createRoom = async () => {
         setDisabled(true)
-
+        const firestore = getFirestore();
         const room = {
             name,
             members: [user?.uid ?? ""],
-            createTime: firebase.firestore.Timestamp.now()
+            createTime: Timestamp.now()
         }
-        await firestore.collection("rooms").add(room)
+        await addDoc(collection(firestore, "rooms"), room)
         closeDialog()
         setName("")
         setDisabled(false)
@@ -258,21 +262,11 @@ function NewRoomDialog() {
     );
 }
 
-const profileIconStyles = makeStyles(theme => createStyles({
-    userIconButton: {
-        marginLeft: 'auto'
-    },
-    userIcon: {
-        borderRadius: '50%',
-        width: 50
-    }
-}))
-
 function UserProfileIcon() {
-    const classes = profileIconStyles()
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+    const [anchorEl, setAnchorEl] = useState(null)
+    const open = Boolean(anchorEl)
 
+    const auth = getAuth()
     const currentUser = useUser()
     const [user, setUser] = useState<User | undefined>(undefined)
     useEffect(() => {
@@ -304,7 +298,7 @@ function UserProfileIcon() {
 
     return (
         <>
-            <IconButton className={classes.userIconButton} onClick={handleMenu}>
+            <IconButton onClick={handleMenu}>
                 <Avatar src={pfp} alt="user pfp"/>
             </IconButton>
             <Menu
@@ -323,7 +317,7 @@ function UserProfileIcon() {
                 onClose={handleClose}
             >
                 <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
-                <MenuItem onClick={() => console.log('signOut')}>Sign out</MenuItem>
+                <MenuItem onClick={() => signOut(auth)}>Sign out</MenuItem>
             </Menu>
         </>
     )

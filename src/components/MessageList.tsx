@@ -1,16 +1,16 @@
-import {List, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
-import Avatar from '@material-ui/core/Avatar';
+import {List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import Avatar from '@mui/material/Avatar';
 import React, {useEffect, useRef, useState} from 'react';
-import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import Typography from "@material-ui/core/Typography";
+import {createStyles, makeStyles} from '@mui/styles';
+import {Theme} from '@mui/material/styles';
+import Typography from "@mui/material/Typography";
 import Room from '../models/Room'
-import firebase from "firebase/app";
-import "firebase/firestore";
 import Message from "../models/Message";
-import {Skeleton} from "@material-ui/lab";
+import {Skeleton} from "@mui/lab";
 import User from "../models/User";
 import Timestamp from "./utils/Timestamp";
 import getUser from "../utils/getUser";
+import {collection, getFirestore, onSnapshot, query, orderBy} from "firebase/firestore";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
         messageContainer: {
             display: 'flex',
             flexDirection: 'column',
-            gap: theme.spacing(1)
         },
         messageHeader: {
             display: 'flex',
@@ -49,22 +48,20 @@ export function MessageList({room}: { room: Room }) {
 
     useEffect(() => {
         setLoaded(false)
-        const firestore = firebase.firestore()
-        const unsub = firestore
-            .collection(`rooms/${room_id}/messages`)
-            .orderBy("createTime", "desc")
-            .onSnapshot(snapshot => {
-                let messages = snapshot.docs.map((doc) => {
-                    const data = doc.data();
-                    return {
-                        id: doc.id,
-                        ...data
-                    } as Message
-                })
-                setMessages(messages)
-                setLoaded(true)
-                lastRef.current?.scrollIntoView();
+        const firestore = getFirestore()
+        const q = query(collection(firestore, `rooms/${room_id}/messages`), orderBy("createTime", "desc"))
+        const unsub = onSnapshot(q, snapshot => {
+            let messages = snapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    ...data
+                } as Message
             })
+            setMessages(messages)
+            setLoaded(true)
+            lastRef.current?.scrollIntoView();
+        })
 
         return () => unsub()
     }, [room_id])
@@ -131,7 +128,7 @@ export function MessageListItemSkeleton() {
     const classes = useSkeletonStyles()
 
     return <div className={classes.outerContainer}>
-        <Skeleton variant="circle" width={45} height={40}/>
+        <Skeleton variant="circular" width={45} height={40}/>
         <div className={classes.contentContainer}>
             <Skeleton variant="text" width="30%"/>
             <Skeleton variant="text"/>
