@@ -8,36 +8,36 @@ import {
     TextField,
     Tooltip,
     Typography,
-} from "@mui/material";
-import {makeStyles, createStyles} from "@mui/styles";
-import {Edit, Save, Warning} from "@mui/icons-material";
-import React, {useEffect, useState} from "react";
+} from '@mui/material'
+import { makeStyles, createStyles } from '@mui/styles'
+import { Edit, Save, Warning } from '@mui/icons-material'
+import React, { useEffect, useState } from 'react'
 import ChangePassword from './ChangePassword'
 import UpdatePhotoButton from './UpdatePhotoButton'
-import useUser from "../../utils/hooks/useUser";
-import getUser from "../../utils/getUser";
-import User from "../../models/User";
-import LoadingIndicator from "../utils/LoadingIndicator";
-import {getFirestore} from "firebase/firestore";
-import {sendEmailVerification, updateEmail} from 'firebase/auth'
-import {Theme} from "@mui/material/styles";
+import useUser from '../../utils/hooks/useUser'
+import getUser from '../../utils/getUser'
+import User from '../../models/User'
+import LoadingIndicator from '../utils/LoadingIndicator'
+import { getFirestore } from 'firebase/firestore'
+import { sendEmailVerification, updateEmail } from 'firebase/auth'
+import { Theme } from '@mui/material/styles'
 
 const useInfoCardStyles = makeStyles((theme: Theme) => createStyles({
     card: {
         width: '50%',
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down('sm')]: {
             width: '90%',
-            margin: "auto",
+            margin: 'auto',
         }
     },
     cardContent: {
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         gap: theme.spacing(1)
     },
 }))
 
-const ProfileInfoCard = ({children}: { children: any }) => {
+const ProfileInfoCard = ({ children }: { children: any }) => {
     const classes = useInfoCardStyles()
 
     return <Card className={classes.card}>
@@ -49,7 +49,7 @@ const ProfileInfoCard = ({children}: { children: any }) => {
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
-        marginLeft: "auto !important",
+        marginLeft: 'auto !important',
     },
 }))
 
@@ -60,10 +60,10 @@ interface EditOrSaveButtonProps {
     onSaveClick: () => void
 }
 
-const EditOrSaveButton = ({editing, loading, setEditing, onSaveClick}: EditOrSaveButtonProps) => {
+const EditOrSaveButton = ({ editing, loading, setEditing, onSaveClick }: EditOrSaveButtonProps) => {
     const classes = useCardActionsStyles()
     if (loading) {
-        return <CircularProgress className={classes.cardContentRight} color="secondary"/>
+        return <CircularProgress className={classes.cardContentRight} color='secondary'/>
     }
 
     return editing
@@ -84,18 +84,18 @@ const EditOrSaveButton = ({editing, loading, setEditing, onSaveClick}: EditOrSav
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: theme.spacing(2),
         paddingTop: theme.spacing(2),
 
-        [theme.breakpoints.up("sm")]: {
+        [theme.breakpoints.up('sm')]: {
             paddingLeft: theme.spacing(2),
         },
     },
     cardContentInner: {
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: theme.spacing(1),
     },
     pfp: {
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         height: '3em',
     },
     emailInfoContainer: {
-        display: "flex",
+        display: 'flex',
         gap: theme.spacing(1),
         alignItems: 'center'
     },
@@ -122,14 +122,14 @@ export default function Profile() {
     const classes = useStyles()
 
     const [editingDisplayName, setEditingDisplayName] = useState(false)
-    const [newDisplayName, setNewDisplayName] = useState("")
+    const [newDisplayName, setNewDisplayName] = useState('')
     const [isUpdatingDisplayName, setIsUpdatingDisplayName] = useState(false)
 
     const [editingEmail, setEditingEmail] = useState(false)
     const [isUpdatingEmail, setIsUpdatingEmail] = useState(false)
-    const [newEmail, setNewEmail] = useState("")
+    const [newEmail, setNewEmail] = useState('')
 
-    const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [passwordDialogOpen, setPasswordDialogOpen] = useState(false)
 
     const user = useUser()
 
@@ -137,7 +137,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (user !== null) {
-            getUser(user?.uid ?? "").then(it => setFetchedUser(it ?? null))
+            getUser(user?.uid ?? '').then((it) => setFetchedUser(it ?? null))
         }
     })
 
@@ -174,8 +174,8 @@ export default function Profile() {
     return (
         <main className={classes.root}>
             <ProfileInfoCard>
-                <Avatar src={fetchedUser?.profilePicture ?? undefined} alt="pfp"/>
-                <Typography variant="h5" component="p">{user?.displayName}</Typography>
+                <Avatar src={fetchedUser?.profilePicture ?? undefined} alt='pfp'/>
+                <Typography variant='h5' component='p'>{user?.displayName}</Typography>
 
                 <UpdatePhotoButton/>
             </ProfileInfoCard>
@@ -185,12 +185,12 @@ export default function Profile() {
                     {
                         editingDisplayName
                             ? <TextField
-                                placeholder="Display Name"
+                                placeholder='Display Name'
                                 onChange={(e) => setNewDisplayName(e.currentTarget.value)}
                             />
                             : <>
-                                <Typography variant="h6" component="h3">Display Name</Typography>
-                                <Typography variant="body1" component="p">{fetchedUser?.displayName}</Typography>
+                                <Typography variant='h6' component='h3'>Display Name</Typography>
+                                <Typography variant='body1' component='p'>{fetchedUser?.displayName}</Typography>
                             </>
                     }
                 </article>
@@ -205,14 +205,14 @@ export default function Profile() {
                     {
                         editingEmail
                             ? <TextField
-                                placeholder="Email"
-                                type="email"
+                                placeholder='Email'
+                                type='email'
                                 onChange={(e) => setNewEmail(e.currentTarget.value)}
                             /> : <>
-                                <Typography variant="h6" component="h3">Email</Typography>
+                                <Typography variant='h6' component='h3'>Email</Typography>
                                 <div className={classes.emailInfoContainer}>
-                                    <Typography variant="body1" component="p">{user?.email}</Typography>
-                                    {!user?.emailVerified && <Tooltip title="Verify email">
+                                    <Typography variant='body1' component='p'>{user?.email}</Typography>
+                                    {!user?.emailVerified && <Tooltip title='Verify email'>
                                         <IconButton className={classes.verifyEmailButton} onClick={verifyEmail}>
                                             <Warning/>
                                         </IconButton>
@@ -231,8 +231,8 @@ export default function Profile() {
             </ProfileInfoCard>
 
             <section>
-                <Typography variant="h5" component="h3" className={classes.passwordHeading}>Password</Typography>
-                <Button variant="contained" onClick={() => setPasswordDialogOpen(true)}
+                <Typography variant='h5' component='h3' className={classes.passwordHeading}>Password</Typography>
+                <Button variant='contained' onClick={() => setPasswordDialogOpen(true)}
                         className={classes.changePasswordButton}>
                     Change Password
                 </Button>

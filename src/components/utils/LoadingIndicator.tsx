@@ -1,5 +1,5 @@
-import {LinearProgress} from "@mui/material";
-import React from "react";
+import { LinearProgress } from '@mui/material'
+import React from 'react'
 
 interface LoadingIndicatorProps {
     color?: 'primary' | 'secondary',
@@ -7,7 +7,7 @@ interface LoadingIndicatorProps {
 
 }
 
-export default function LoadingIndicator({color, isVisible}: LoadingIndicatorProps) {
+export default function LoadingIndicator({ color, isVisible }: LoadingIndicatorProps) {
     if (!isVisible) {
         return <></>
     }

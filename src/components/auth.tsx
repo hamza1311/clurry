@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import { createStyles, makeStyles } from '@mui/styles';
-import TextField from '@mui/material/TextField';
-import {Button, Card, Tabs, Tab, AppBar, Box} from "@mui/material";
-import LoadingIndicator from "./utils/LoadingIndicator";
-import PasswordField from "./utils/PasswordField";
-import {useHistory} from 'react-router'
-import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
-import {Theme} from "@mui/material/styles";
+import React, { useState } from 'react'
+import { createStyles, makeStyles } from '@mui/styles'
+import TextField from '@mui/material/TextField'
+import { Button, Card, Tabs, Tab, AppBar, Box } from '@mui/material'
+import LoadingIndicator from './utils/LoadingIndicator'
+import PasswordField from './utils/PasswordField'
+import { useHistory } from 'react-router'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import { Theme } from '@mui/material/styles'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         display: 'flex'
     },
     wrapper: {
-        margin: "auto",
+        margin: 'auto',
         width: '35vw',
         transition: 'height ease 1s'
     },
@@ -28,31 +28,31 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width: 'max-content',
         alignSelf: 'center'
     }
-}));
+}))
 
 
 function SignIn() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
     const [signingIn, setSigningIn] = useState(false)
 
     const auth = getAuth()
-    const classes = useStyles();
-    const router = useHistory();
+    const classes = useStyles()
+    const router = useHistory()
 
     const signIn = async () => {
         setSigningIn(true)
         await signInWithEmailAndPassword(auth, email, password)
         setSigningIn(false)
-        router.push("/");
+        router.push('/')
     }
 
     const form = (
-        <form className={classes.form} noValidate autoComplete="off">
+        <form className={classes.form} noValidate autoComplete='off'>
             <TextField
-                label="Email"
-                type="email"
-                variant="standard"
+                label='Email'
+                type='email'
+                variant='standard'
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={signingIn}
             />
@@ -60,13 +60,13 @@ function SignIn() {
             <PasswordField
                 disabled={signingIn}
                 value={password}
-                label="Password"
+                label='Password'
                 onChange={(e) => setPassword(e.target.value)}
             />
 
             <Button
                 onClick={signIn}
-                variant="contained"
+                variant='contained'
                 className={classes.signinOrUpButton}
                 disabled={signingIn}>Sign in</Button>
         </form>
@@ -82,29 +82,29 @@ function SignIn() {
 
 
 function SignUp() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [signingUp, setSigningUp] = useState(false)
 
-    const classes = useStyles();
+    const classes = useStyles()
 
-    const auth = getAuth();
+    const auth = getAuth()
 
     const signUp = async () => {
         setSigningUp(true)
         if (password === confirmPassword) {
             await createUserWithEmailAndPassword(auth, email, password)
         } else {
-            alert("password mismatch")
+            alert('password mismatch')
         }
     }
 
     const form = (
-        <form className={classes.form} noValidate autoComplete="off">
+        <form className={classes.form} noValidate autoComplete='off'>
             <TextField
-                label="Email"
-                type="email"
+                label='Email'
+                type='email'
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={signingUp}
             />
@@ -112,20 +112,20 @@ function SignUp() {
             <PasswordField
                 disabled={signingUp}
                 value={password}
-                label="Password"
+                label='Password'
                 onChange={(e) => setPassword(e.target.value)}
             />
 
             <PasswordField
                 disabled={signingUp}
                 value={confirmPassword}
-                label="Confirm Password"
+                label='Confirm Password'
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
             <Button
                 onClick={signUp}
-                variant="contained"
+                variant='contained'
                 className={classes.signinOrUpButton}
                 disabled={signingUp}>Sign up</Button>
         </form>
@@ -146,11 +146,11 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-    const {children, value, index, ...other} = props;
+    const { children, value, index, ...other } = props
 
     return (
         <div
-            role="tabpanel"
+            role='tabpanel'
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
@@ -162,27 +162,27 @@ function TabPanel(props: TabPanelProps) {
                 </Box>
             )}
         </div>
-    );
+    )
 }
 
 export default function Auth() {
-    const classes = useStyles();
+    const classes = useStyles()
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
-    };
+        setValue(newValue)
+    }
 
     return <>
         <main className={classes.root}>
             <div className={classes.wrapper}>
                 <Card>
-                    <AppBar position="static">
-                        <Tabs value={value} onChange={handleChange} aria-label="auth tabs" variant="fullWidth"
+                    <AppBar position='static'>
+                        <Tabs value={value} onChange={handleChange} aria-label='auth tabs' variant='fullWidth'
                               centered={true}>
-                            <Tab label="Sign In"/>
-                            <Tab label="Sign Up"/>
+                            <Tab label='Sign In'/>
+                            <Tab label='Sign Up'/>
                         </Tabs>
                     </AppBar>
                     <TabPanel value={value} index={0}>

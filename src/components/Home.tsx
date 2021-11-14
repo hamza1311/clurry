@@ -1,33 +1,33 @@
-import React, {useEffect, useState} from 'react';
-import clsx from 'clsx';
-import {createStyles, makeStyles} from '@mui/styles';
-import Drawer from '@mui/material/Drawer';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import {MessageList, MessageListItemSkeleton} from "./MessageList";
+import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { createStyles, makeStyles } from '@mui/styles'
+import Drawer from '@mui/material/Drawer'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import List from '@mui/material/List'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import { MessageList, MessageListItemSkeleton } from './MessageList'
 import Room from '../models/Room'
-import CreateMessage, {CreateMessageSkeleton} from './CreateMessage'
-import useRooms from "../utils/hooks/useRooms";
-import {Avatar, Button, Dialog, DialogActions, DialogTitle, Link, Menu, MenuItem, TextField} from "@mui/material";
-import {Link as RouterLink} from 'react-router-dom'
-import {useLocation, useHistory} from 'react-router'
-import useUser from "../utils/hooks/useUser";
-import User from "../models/User";
-import getUser from "../utils/getUser";
-import {Timestamp, collection, addDoc, getFirestore} from "firebase/firestore";
-import {getAuth, signOut} from 'firebase/auth'
-import {Theme} from "@mui/material/styles";
+import CreateMessage, { CreateMessageSkeleton } from './CreateMessage'
+import useRooms from '../utils/hooks/useRooms'
+import { Avatar, Button, Dialog, DialogActions, DialogTitle, Link, Menu, MenuItem, TextField } from '@mui/material'
+import { Link as RouterLink } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router'
+import useUser from '../utils/hooks/useUser'
+import User from '../models/User'
+import getUser from '../utils/getUser'
+import { Timestamp, collection, addDoc, getFirestore } from 'firebase/firestore'
+import { getAuth, signOut } from 'firebase/auth'
+import { Theme } from '@mui/material/styles'
 
-const drawerWidth = 240;
-const appBarHeight = 69;
+const drawerWidth = 240
+const appBarHeight = 69
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
         root: {
@@ -99,23 +99,23 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             height: '75vh'
         },
     }),
-);
+)
 
 export default function Home() {
-    const classes = useStyles();
-    const [open, setOpen] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    const classes = useStyles()
+    const [open, setOpen] = useState(false)
+    const [selectedIndex, setSelectedIndex] = useState(0)
     const rooms = useRooms()
 
     const selectedRoom = rooms[selectedIndex]
 
     const handleDrawerOpen = () => {
-        setOpen(true);
+        setOpen(true)
 
-    };
+    }
     const handleDrawerClose = () => {
-        setOpen(false);
-    };
+        setOpen(false)
+    }
 
     let skeleton = new Array(7).fill(<MessageListItemSkeleton/>)
 
@@ -139,22 +139,22 @@ export default function Home() {
     return (
         <div className={classes.root}>
             <AppBar
-                position="fixed"
+                position='fixed'
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: open,
                 })}
             >
                 <Toolbar>
                     <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
+                        color='inherit'
+                        aria-label='open drawer'
                         onClick={handleDrawerOpen}
-                        edge="start"
+                        edge='start'
                         className={clsx(classes.menuButton, open && classes.hide)}
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" noWrap className={classes.roomName}>
+                    <Typography variant='h6' noWrap className={classes.roomName}>
                         {selectedRoom?.name}
                     </Typography>
                     <div className={classes.separator} />
@@ -163,8 +163,8 @@ export default function Home() {
             </AppBar>
             <Drawer
                 className={classes.drawer}
-                variant="persistent"
-                anchor="left"
+                variant='persistent'
+                anchor='left'
                 open={open}
                 classes={{
                     paper: classes.drawerPaper,
@@ -183,7 +183,7 @@ export default function Home() {
                         ))
                     }
                     <ListItem>
-                        <Link component={RouterLink} to="/#new-room">
+                        <Link component={RouterLink} to='/#new-room'>
                             <Button>
                                 New Room
                             </Button>
@@ -200,7 +200,7 @@ export default function Home() {
             </main>
             <NewRoomDialog/>
         </div>
-    );
+    )
 }
 
 
@@ -209,7 +209,7 @@ interface RoomListItemProps {
     onClick: () => void
 }
 
-function RoomsListItem({room, onClick}: RoomListItemProps) {
+function RoomsListItem({ room, onClick }: RoomListItemProps) {
     return (
         <ListItem button onClick={onClick}>
             <ListItemText primary={room.name}/>
@@ -218,7 +218,7 @@ function RoomsListItem({room, onClick}: RoomListItemProps) {
 }
 
 function NewRoomDialog() {
-    const [name, setName] = useState("")
+    const [name, setName] = useState('')
     const location = useLocation()
     const history = useHistory()
     const user = useUser()
@@ -227,25 +227,25 @@ function NewRoomDialog() {
 
     const createRoom = async () => {
         setDisabled(true)
-        const firestore = getFirestore();
+        const firestore = getFirestore()
         const room = {
             name,
-            members: [user?.uid ?? ""],
+            members: [user?.uid ?? ''],
             createTime: Timestamp.now()
         }
-        await addDoc(collection(firestore, "rooms"), room)
+        await addDoc(collection(firestore, 'rooms'), room)
         closeDialog()
-        setName("")
+        setName('')
         setDisabled(false)
-    };
+    }
 
     const closeDialog = () => {
-        history.push("/") // todo current url without #hash
+        history.push('/') // todo current url without #hash
     }
 
     return (
-        <Dialog onClose={closeDialog} aria-labelledby="simple-dialog-title" open={location.hash === '#new-room'}>
-            <DialogTitle id="simple-dialog-title">Create New Room</DialogTitle>
+        <Dialog onClose={closeDialog} aria-labelledby='simple-dialog-title' open={location.hash === '#new-room'}>
+            <DialogTitle id='simple-dialog-title'>Create New Room</DialogTitle>
 
             <TextField
                 value={name}
@@ -259,7 +259,7 @@ function NewRoomDialog() {
             </DialogActions>
 
         </Dialog>
-    );
+    )
 }
 
 function UserProfileIcon() {
@@ -280,18 +280,18 @@ function UserProfileIcon() {
     const history = useHistory()
 
     const navigateToProfile = async () => {
-        history.push("/profile")
+        history.push('/profile')
         handleClose()
     }
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     // @ts-ignore
     const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        setAnchorEl(event.currentTarget)
+    }
 
 
     const pfp = user?.profilePicture ?? undefined
@@ -299,10 +299,10 @@ function UserProfileIcon() {
     return (
         <>
             <IconButton onClick={handleMenu}>
-                <Avatar src={pfp} alt="user pfp"/>
+                <Avatar src={pfp} alt='user pfp'/>
             </IconButton>
             <Menu
-                id="menu-appbar"
+                id='menu-appbar'
                 anchorEl={anchorEl}
                 anchorOrigin={{
                     vertical: 'top',

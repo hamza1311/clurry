@@ -1,14 +1,14 @@
-import {makeStyles} from "@mui/styles";
-import React, {lazy, useState, Suspense} from "react";
-import {IconButton} from "@mui/material";
-import {MoreHoriz} from "@mui/icons-material";
+import { makeStyles } from '@mui/styles'
+import React, { lazy, useState, Suspense } from 'react'
+import { IconButton } from '@mui/material'
+import { MoreHoriz } from '@mui/icons-material'
 
-const Menu = lazy(() => import('@mui/material/Menu'));
-const MenuItem = lazy(() => import('@mui/material/MenuItem'));
+const Menu = lazy(() => import('@mui/material/Menu'))
+const MenuItem = lazy(() => import('@mui/material/MenuItem'))
 
 const useStyles = makeStyles({
     cardContentRight: {
-        marginLeft: "auto !important",
+        marginLeft: 'auto !important',
     },
 })
 
@@ -19,8 +19,8 @@ export default function UpdatePhotoButton() {
     const open = Boolean(anchorEl)
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+        setAnchorEl(null)
+    }
 
     const removePhoto = () => {
         // TODO

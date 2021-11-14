@@ -1,17 +1,17 @@
-import {createStyles, makeStyles} from "@mui/styles";
-import React, {useState} from "react";
-import {TextField} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import SendIcon from "@mui/icons-material/Send";
+import { createStyles, makeStyles } from '@mui/styles'
+import React, { useState } from 'react'
+import { TextField } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import SendIcon from '@mui/icons-material/Send'
 import Room from '../models/Room'
-import {addDoc, collection, getFirestore, Timestamp} from "firebase/firestore";
-import {getAuth} from "firebase/auth";
-import {Theme} from "@mui/material/styles";
+import { addDoc, collection, getFirestore, Timestamp } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import { Theme } from '@mui/material/styles'
 
 const useInputStyles = makeStyles((theme: Theme) => createStyles({
     container: {
         alignSelf: 'flex-start',
-        margin: theme.spacing("auto", 0, 3, 0),
+        margin: theme.spacing('auto', 0, 3, 0),
         width: '100%',
         display: 'flex',
         gap: theme.spacing(2),
@@ -22,18 +22,18 @@ const useInputStyles = makeStyles((theme: Theme) => createStyles({
     }
 }))
 
-export default function CreateMessage({room}: { room: Room }) {
+export default function CreateMessage({ room }: { room: Room }) {
     const classes = useInputStyles()
 
     const firestore = getFirestore()
     const auth = getAuth()
 
-    const [content, setContent] = useState("")
+    const [content, setContent] = useState('')
 
     const sendMessage = async () => {
         const currentUser = auth.currentUser
         if (currentUser === null) {
-            throw Error("unreachable")
+            throw Error('unreachable')
         }
 
         const message = {
@@ -44,7 +44,7 @@ export default function CreateMessage({room}: { room: Room }) {
         }
 
         await addDoc(collection(firestore, `rooms/${room.id}/messages`), message)
-        setContent("")
+        setContent('')
     }
 
     return (

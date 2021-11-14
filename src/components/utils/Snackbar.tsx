@@ -1,7 +1,7 @@
-import {IconButton, SnackbarCloseReason} from "@mui/material";
-import Snackbar from '@mui/material/Snackbar';
-import CloseIcon from '@mui/icons-material/Close';
-import React from "react";
+import { IconButton, SnackbarCloseReason } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
+import CloseIcon from '@mui/icons-material/Close'
+import React from 'react'
 
 function SimpleSnackbar(props: {
     message: string,
@@ -16,7 +16,7 @@ function SimpleSnackbar(props: {
     }
 
     const onSnackbarClose = (e: React.SyntheticEvent<any>, reason: SnackbarCloseReason) => {
-        if (reason === "clickaway") {
+        if (reason === 'clickaway') {
             return
         }
 
@@ -38,13 +38,13 @@ function SimpleSnackbar(props: {
                 action={<>
                     {props.action}
 
-                    <IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
-                        <CloseIcon fontSize="small"/>
+                    <IconButton size='small' aria-label='close' color='inherit' onClick={closeSnackbar}>
+                        <CloseIcon fontSize='small'/>
                     </IconButton>
                 </>}
             />
         </div>
-    );
+    )
 }
 
 SimpleSnackbar.defaultProps = {

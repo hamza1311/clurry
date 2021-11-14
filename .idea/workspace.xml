@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f1690fde-aaf5-4c6c-8184-a5ac3507051b" name="Changes" comment="">
+    <list default="true" id="f1690fde-aaf5-4c6c-8184-a5ac3507051b" name="Changes" comment="fucking breaking changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
@@ -18,9 +18,7 @@
       <change beforePath="$PROJECT_DIR$/src/components/utils/Snackbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/utils/Snackbar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/utils/Timestamp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/utils/Timestamp.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Message.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Message.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/Room.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/Room.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/logo.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/getUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/getUser.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/hooks/useRooms.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/hooks/useRooms.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/hooks/useUser.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/hooks/useUser.ts" afterDir="false" />
@@ -67,7 +65,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
-    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -77,8 +75,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1636876482182</updated>
-      <workItem from="1636876483908" duration="8401000" />
+      <workItem from="1636876483908" duration="9904000" />
     </task>
+    <task id="LOCAL-00001" summary="fucking breaking changes">
+      <created>1636898218497</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1636898218497</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fucking breaking changes">
+      <created>1636898261786</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1636898261786</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -94,5 +107,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fucking breaking changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="fucking breaking changes" />
   </component>
 </project>

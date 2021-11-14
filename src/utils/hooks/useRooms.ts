@@ -1,22 +1,22 @@
-import {useEffect, useState} from "react";
-import Room from "../../models/Room";
-import useUser from "./useUser";
-import {collection, where, getFirestore, onSnapshot, query} from "firebase/firestore";
+import { useEffect, useState } from 'react'
+import Room from '../../models/Room'
+import useUser from './useUser'
+import { collection, where, getFirestore, onSnapshot, query } from 'firebase/firestore'
 
 const useRooms = () => {
     const [rooms, setRooms] = useState<Room[]>([])
 
-    const user = useUser();
+    const user = useUser()
     useEffect(() => {
-        const firestore = getFirestore();
+        const firestore = getFirestore()
         if (user === null) {
             return () => {
             }
         }
         return onSnapshot(
             query(collection(firestore, 'rooms'), where('members', 'array-contains', user.uid)),
-            snapshot => {
-                const rooms = snapshot.docs.map(doc => {
+            (snapshot) => {
+                const rooms = snapshot.docs.map((doc) => {
                     const data = doc.data()
                     const output: Room = {
                         id: doc.id,

@@ -1,23 +1,23 @@
-import {makeStyles, createStyles} from "@mui/styles";
-import React, {lazy, Suspense, useState} from "react";
-import {Button} from "@mui/material";
-import PasswordField from "../utils/PasswordField";
-import {updatePassword, EmailAuthProvider, reauthenticateWithCredential} from "firebase/auth"
-import useUser from "../../utils/hooks/useUser";
-import LoadingIndicator from "../utils/LoadingIndicator";
-import {Theme} from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles'
+import React, { lazy, Suspense, useState } from 'react'
+import { Button } from '@mui/material'
+import PasswordField from '../utils/PasswordField'
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth'
+import useUser from '../../utils/hooks/useUser'
+import LoadingIndicator from '../utils/LoadingIndicator'
+import { Theme } from '@mui/material'
 
-const Dialog = lazy(() => import("@mui/material/Dialog"))
-const DialogActions = lazy(() => import("@mui/material/DialogActions"))
-const DialogContent = lazy(() => import("@mui/material/DialogContent"))
-const DialogTitle = lazy(() => import("@mui/material/DialogTitle"))
+const Dialog = lazy(() => import('@mui/material/Dialog'))
+const DialogActions = lazy(() => import('@mui/material/DialogActions'))
+const DialogContent = lazy(() => import('@mui/material/DialogContent'))
+const DialogTitle = lazy(() => import('@mui/material/DialogTitle'))
 
-const Snackbar = lazy(() => import("../utils/Snackbar"))
+const Snackbar = lazy(() => import('../utils/Snackbar'))
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
-        [theme.breakpoints.down("sm")]: {
-            marginLeft: "5%",
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: '5%',
         }
     },
     passwordHeading: {
@@ -27,19 +27,19 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         width: 'max-content',
     },
     dialogContent: {
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: theme.spacing(2)
     }
 }))
 
-export default function ChangePassword({dialogOpen, setDialogOpen}: { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }) {
+export default function ChangePassword({ dialogOpen, setDialogOpen }: { dialogOpen: boolean, setDialogOpen: (value: boolean) => void }) {
     const classes = useStyles()
 
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmNewPassword, setConfirmNewPassword] = useState("");
-    const [oldPassword, setOldPassword] = useState("");
-    const [changingPassword, setChangingPassword] = useState(false);
+    const [newPassword, setNewPassword] = useState('')
+    const [confirmNewPassword, setConfirmNewPassword] = useState('')
+    const [oldPassword, setOldPassword] = useState('')
+    const [changingPassword, setChangingPassword] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [snackbarOpen, setSnackbarOpen] = useState(false)
 
@@ -47,20 +47,20 @@ export default function ChangePassword({dialogOpen, setDialogOpen}: { dialogOpen
 
 
     const handleClose = () => {
-        setDialogOpen(false);
-    };
+        setDialogOpen(false)
+    }
 
 
     const changePassword = async () => {
         if (user === null) {
-            throw Error("bruh???")
+            throw Error('bruh???')
         }
         setChangingPassword(true)
         if (newPassword !== confirmNewPassword) {
-            setError("passwords do not match")
+            setError('passwords do not match')
         } else {
             if (user.email === null) {
-                throw Error("unreachable")
+                throw Error('unreachable')
             }
 
             const credential = EmailAuthProvider.credential(user.email, oldPassword)
@@ -77,28 +77,28 @@ export default function ChangePassword({dialogOpen, setDialogOpen}: { dialogOpen
         <Suspense fallback={<LoadingIndicator isVisible={true} />}>
             <section className={classes.root}>
 
-                <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby="change-password-dialog-title">
-                    <DialogTitle id="change-password-dialog-title">Change Password</DialogTitle>
+                <Dialog open={dialogOpen} onClose={handleClose} aria-labelledby='change-password-dialog-title'>
+                    <DialogTitle id='change-password-dialog-title'>Change Password</DialogTitle>
 
                     <DialogContent className={classes.dialogContent}>
                         <PasswordField
                             disabled={changingPassword}
                             value={oldPassword}
-                            label="Old password"
+                            label='Old password'
                             onChange={(e) => setOldPassword(e.target.value)}
                         />
 
                         <PasswordField
                             disabled={changingPassword}
                             value={newPassword}
-                            label="New password"
+                            label='New password'
                             onChange={(e) => setNewPassword(e.target.value)}
                         />
 
                         <PasswordField
                             disabled={changingPassword}
                             value={confirmNewPassword}
-                            label="Confirm new password"
+                            label='Confirm new password'
                             onChange={(e) => setConfirmNewPassword(e.target.value)}
                         />
 
@@ -116,7 +116,7 @@ export default function ChangePassword({dialogOpen, setDialogOpen}: { dialogOpen
                     </DialogActions>
                 </Dialog>
             </section>
-            <Snackbar message="Password changed successfully" open={snackbarOpen} setOpen={setSnackbarOpen}/>
+            <Snackbar message='Password changed successfully' open={snackbarOpen} setOpen={setSnackbarOpen}/>
         </Suspense>
     </>)
 }
