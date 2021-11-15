@@ -11,7 +11,7 @@ import { Theme } from '@mui/material/styles'
 const useInputStyles = makeStyles((theme: Theme) => createStyles({
     container: {
         alignSelf: 'flex-start',
-        margin: theme.spacing('auto', 0, 3, 0),
+        margin: theme.spacing(2, 0, 3, 0),
         width: '100%',
         display: 'flex',
         gap: theme.spacing(2),
@@ -47,10 +47,24 @@ export default function CreateMessage({ room }: { room: Room }) {
         setContent('')
     }
 
+    const onKeyDown = async (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key.toLowerCase() === 'enter' && !e.shiftKey) {
+            e.preventDefault()
+            await sendMessage()
+        }
+    }
+
     return (
         <div className={classes.container}>
-            <TextField multiline maxRows={5} className={classes.input} onChange={(e) => setContent(e.target.value)}
-                       value={content}/>
+            <TextField
+                multiline
+                maxRows={5}
+                className={classes.input}
+                onChange={(e) => setContent(e.target.value)}
+                label='Type a message...'
+                value={content}
+                onKeyDown={(e) => onKeyDown(e)}
+            />
             <IconButton onClick={sendMessage}>
                 <SendIcon/>
             </IconButton>

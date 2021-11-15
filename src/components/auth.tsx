@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { createStyles, makeStyles } from '@mui/styles'
 import TextField from '@mui/material/TextField'
-import { Button, Card, Tabs, Tab, AppBar, Box } from '@mui/material'
+import { Button, Card, Tabs, Tab, AppBar, Box, Collapse } from '@mui/material'
 import LoadingIndicator from './utils/LoadingIndicator'
 import PasswordField from './utils/PasswordField'
 import { useHistory } from 'react-router'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
 import { Theme } from '@mui/material/styles'
+
+type SigningInOrUp = 'in' | 'up'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
@@ -24,77 +26,40 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         gap: theme.spacing(4),
         padding: theme.spacing(3),
     },
+    confirmPasswordField: {
+        width: 'inherit'
+    },
     signinOrUpButton: {
         width: 'max-content',
         alignSelf: 'center'
     }
 }))
 
-
-function SignIn() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [signingIn, setSigningIn] = useState(false)
-
-    const auth = getAuth()
-    const classes = useStyles()
-    const router = useHistory()
-
-    const signIn = async () => {
-        setSigningIn(true)
-        await signInWithEmailAndPassword(auth, email, password)
-        setSigningIn(false)
-        router.push('/')
-    }
-
-    const form = (
-        <form className={classes.form} noValidate autoComplete='off'>
-            <TextField
-                label='Email'
-                type='email'
-                variant='standard'
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={signingIn}
-            />
-
-            <PasswordField
-                disabled={signingIn}
-                value={password}
-                label='Password'
-                onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <Button
-                onClick={signIn}
-                variant='contained'
-                className={classes.signinOrUpButton}
-                disabled={signingIn}>Sign in</Button>
-        </form>
-    )
-
-    return (
-        <>
-            <LoadingIndicator isVisible={signingIn}/>
-            {form}
-        </>
-    )
-}
-
-
-function SignUp() {
+function SignInOrUp({ inOrUp }: {inOrUp: SigningInOrUp}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [signingUp, setSigningUp] = useState(false)
 
     const classes = useStyles()
+    const router = useHistory()
 
     const auth = getAuth()
+
+    const signIn = async () => {
+        setSigningUp(true)
+        await signInWithEmailAndPassword(auth, email, password)
+        setSigningUp(false)
+        router.push('/')
+    }
+
 
     const signUp = async () => {
         setSigningUp(true)
         if (password === confirmPassword) {
             await createUserWithEmailAndPassword(auth, email, password)
+            setSigningUp(false)
+            router.push('/')
         } else {
             alert('password mismatch')
         }
@@ -104,6 +69,7 @@ function SignUp() {
         <form className={classes.form} noValidate autoComplete='off'>
             <TextField
                 label='Email'
+                variant='standard'
                 type='email'
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={signingUp}
@@ -116,18 +82,21 @@ function SignUp() {
                 onChange={(e) => setPassword(e.target.value)}
             />
 
+            <Collapse in={inOrUp === 'up'} timeout='auto' unmountOnExit>
             <PasswordField
                 disabled={signingUp}
                 value={confirmPassword}
                 label='Confirm Password'
+                className={classes.confirmPasswordField}
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
+            </Collapse>
 
             <Button
-                onClick={signUp}
+                onClick={inOrUp === 'up' ? signUp : signIn}
                 variant='contained'
                 className={classes.signinOrUpButton}
-                disabled={signingUp}>Sign up</Button>
+                disabled={signingUp}>{inOrUp === 'up' ? 'Sign Up' : 'Sign In'}</Button>
         </form>
     )
 
@@ -139,36 +108,10 @@ function SignUp() {
     )
 }
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-
-    return (
-        <div
-            role='tabpanel'
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    )
-}
-
 export default function Auth() {
     const classes = useStyles()
 
-    const [value, setValue] = React.useState(0)
+    const [value, setValue] = useState(0)
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue)
@@ -179,18 +122,21 @@ export default function Auth() {
             <div className={classes.wrapper}>
                 <Card>
                     <AppBar position='static'>
-                        <Tabs value={value} onChange={handleChange} aria-label='auth tabs' variant='fullWidth'
-                              centered={true}>
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            aria-label='auth tabs'
+                            variant='fullWidth'
+                            textColor='inherit'
+                            centered
+                        >
                             <Tab label='Sign In'/>
                             <Tab label='Sign Up'/>
                         </Tabs>
                     </AppBar>
-                    <TabPanel value={value} index={0}>
-                        <SignIn/>
-                    </TabPanel>
-                    <TabPanel value={value} index={1}>
-                        <SignUp/>
-                    </TabPanel>
+                    <Box p={3}>
+                        <SignInOrUp inOrUp={value === 0 ? 'in' : 'up'}/>
+                    </Box>
                 </Card>
             </div>
         </main>

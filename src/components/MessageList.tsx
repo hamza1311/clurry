@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
+function NoMessages() {
+    return <div>There's nothing here</div>
+}
 
 export function MessageList({ room }: { room: Room }) {
 
@@ -71,7 +74,7 @@ export function MessageList({ room }: { room: Room }) {
         : new Array(7).fill(<MessageListItemSkeleton/>)
     return (<>
         <List className={classes.root} aria-label='messages'>
-            {items}
+            {items.length !== 0 ? items : <NoMessages />}
             <div id='last' ref={lastRef}/>
         </List>
     </>)
@@ -85,8 +88,9 @@ function MessageListItem({ message }: { message: Message }) {
     useEffect(() => {
         getUser(message.author).then((it) => setAuthor(it ?? null))
     }, [message.author])
+
     return (
-        <ListItem>
+        <ListItem key={message.id}>
             <ListItemAvatar>
                 <Avatar
                     src={author?.profilePicture ?? ''}
@@ -135,5 +139,3 @@ export function MessageListItemSkeleton() {
         </div>
     </div>
 }
-
-

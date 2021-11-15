@@ -29,7 +29,8 @@ import { Theme } from '@mui/material/styles'
 const drawerWidth = 240
 const appBarHeight = 69
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
         root: {
             display: 'flex',
         },
@@ -49,8 +50,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             }),
         },
         roomName: {
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(2),
+            padding: theme.spacing(0, 2),
         },
         separator: {
             flex: '1 1 auto',
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
                 duration: theme.transitions.duration.leavingScreen,
             }),
             marginLeft: -drawerWidth,
-
+            padding: theme.spacing(0, 2),
             display: 'flex',
             flexDirection: 'column'
         },
@@ -95,8 +95,8 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
             marginLeft: 0,
         },
         list: {
+            marginTop: 'auto',
             overflow: 'auto',
-            height: '75vh'
         },
     }),
 )
@@ -157,7 +157,7 @@ export default function Home() {
                     <Typography variant='h6' noWrap className={classes.roomName}>
                         {selectedRoom?.name}
                     </Typography>
-                    <div className={classes.separator} />
+                    <div className={classes.separator}/>
                     <UserProfileIcon/>
                 </Toolbar>
             </AppBar>
