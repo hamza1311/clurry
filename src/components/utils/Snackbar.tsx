@@ -3,13 +3,15 @@ import Snackbar from '@mui/material/Snackbar'
 import CloseIcon from '@mui/icons-material/Close'
 import React from 'react'
 
-function SimpleSnackbar(props: {
+type Props = {
     message: string,
     action: React.ReactNode
     open: boolean
     setOpen: (value: boolean) => void
     onSnackbarClose: (reason: SnackbarCloseReason) => void
-}) {
+}
+
+function SimpleSnackbar(props: Props) {
 
     const closeSnackbar = () => {
         props.setOpen(false)

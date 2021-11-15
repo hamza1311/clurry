@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, makeStyles } from '@mui/styles'
 import Drawer from '@mui/material/Drawer'
@@ -12,19 +12,18 @@ import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import { MessageList, MessageListItemSkeleton } from './MessageList'
+import { MessageList } from './messages/MessageList'
 import Room from '../models/Room'
-import CreateMessage, { CreateMessageSkeleton } from './CreateMessage'
+import CreateMessage, { CreateMessageSkeleton } from './messages/CreateMessage'
 import useRooms from '../utils/hooks/useRooms'
-import { Avatar, Button, Dialog, DialogActions, DialogTitle, Link, Menu, MenuItem, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogTitle, Link, TextField } from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
-import { useLocation, useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import useUser from '../utils/hooks/useUser'
-import User from '../models/User'
-import getUser from '../utils/getUser'
-import { Timestamp, collection, addDoc, getFirestore } from 'firebase/firestore'
-import { getAuth, signOut } from 'firebase/auth'
+import { addDoc, collection, getFirestore, Timestamp } from 'firebase/firestore'
 import { Theme } from '@mui/material/styles'
+import MessageListItemSkeleton from './messages/MessageListItemSkeleton'
+import UserProfileIcon from './UserProfileIcon'
 
 const drawerWidth = 240
 const appBarHeight = 69
@@ -117,7 +116,7 @@ export default function Home() {
         setOpen(false)
     }
 
-    let skeleton = new Array(7).fill(<MessageListItemSkeleton/>)
+    let skeleton = new Array(7).fill(<MessageListItemSkeleton />)
 
     const content = selectedRoom ? (
         <>
@@ -262,63 +261,3 @@ function NewRoomDialog() {
     )
 }
 
-function UserProfileIcon() {
-    const [anchorEl, setAnchorEl] = useState(null)
-    const open = Boolean(anchorEl)
-
-    const auth = getAuth()
-    const currentUser = useUser()
-    const [user, setUser] = useState<User | undefined>(undefined)
-    useEffect(() => {
-        if (currentUser !== null) {
-            getUser(currentUser?.uid).then((fetchedUser) => {
-                setUser(fetchedUser)
-            })
-        }
-    }, [currentUser])
-
-    const history = useHistory()
-
-    const navigateToProfile = async () => {
-        history.push('/profile')
-        handleClose()
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    // @ts-ignore
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget)
-    }
-
-
-    const pfp = user?.profilePicture ?? undefined
-
-    return (
-        <>
-            <IconButton onClick={handleMenu}>
-                <Avatar src={pfp} alt='user pfp'/>
-            </IconButton>
-            <Menu
-                id='menu-appbar'
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
-                <MenuItem onClick={() => signOut(auth)}>Sign out</MenuItem>
-            </Menu>
-        </>
-    )
-}

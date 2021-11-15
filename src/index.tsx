@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
-import  { initializeApp } from 'firebase/app'
-
+import { initializeApp } from 'firebase/app'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyBsJy5-ApwhEnMC3jRfB7-9eeVhPdvJkWA',
@@ -16,8 +15,8 @@ const firebaseConfig = {
 initializeApp(firebaseConfig)
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <App/>
+    </React.StrictMode>,
+    document.getElementById('root')
 )

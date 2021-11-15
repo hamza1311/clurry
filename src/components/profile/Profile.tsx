@@ -1,15 +1,5 @@
-import {
-    Avatar,
-    Button,
-    Card,
-    CardContent,
-    CircularProgress,
-    IconButton,
-    TextField,
-    Tooltip,
-    Typography,
-} from '@mui/material'
-import { makeStyles, createStyles } from '@mui/styles'
+import { Avatar, Button, CircularProgress, IconButton, TextField, Tooltip, Typography, } from '@mui/material'
+import { createStyles, makeStyles } from '@mui/styles'
 import { Edit, Save, Warning } from '@mui/icons-material'
 import React, { useEffect, useState } from 'react'
 import ChangePassword from './ChangePassword'
@@ -18,34 +8,10 @@ import useUser from '../../utils/hooks/useUser'
 import getUser from '../../utils/getUser'
 import User from '../../models/User'
 import LoadingIndicator from '../utils/LoadingIndicator'
-import { getFirestore } from 'firebase/firestore'
+import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
 import { sendEmailVerification, updateEmail } from 'firebase/auth'
 import { Theme } from '@mui/material/styles'
-
-const useInfoCardStyles = makeStyles((theme: Theme) => createStyles({
-    card: {
-        width: '50%',
-        [theme.breakpoints.down('sm')]: {
-            width: '90%',
-            margin: 'auto',
-        }
-    },
-    cardContent: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: theme.spacing(1)
-    },
-}))
-
-const ProfileInfoCard = ({ children }: { children: any }) => {
-    const classes = useInfoCardStyles()
-
-    return <Card className={classes.card}>
-        <CardContent className={classes.cardContent}>
-            {children}
-        </CardContent>
-    </Card>
-}
+import { ProfileInfoCard } from './ProfileInfoCard'
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
@@ -149,11 +115,11 @@ export default function Profile() {
     const updateDisplayName = async () => {
         setIsUpdatingDisplayName(true)
 
-        // const docRef = doc(collection(firestore, "users"), user.uid)
-        /* TODO {merge: true}
+        const docRef = doc(collection(firestore, 'users'), user.uid)
         await updateDoc(docRef, {
-            displayName: newDisplayName
-        })*/
+            displayName: newDisplayName,
+            ...fetchedUser
+        })
 
         setEditingDisplayName(false)
         setIsUpdatingDisplayName(false)

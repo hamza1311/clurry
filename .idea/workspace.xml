@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f1690fde-aaf5-4c6c-8184-a5ac3507051b" name="Changes" comment="run eslint">
+    <list default="true" id="f1690fde-aaf5-4c6c-8184-a5ac3507051b" name="Changes" comment="styling fixes">
+      <change afterPath="$PROJECT_DIR$/src/components/UserProfileIcon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/Auth.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/SignInOrUp.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/messages/MessageListItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/messages/MessageListItemSkeleton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/profile/ProfileInfoCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CreateMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CreateMessage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CreateMessage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/messages/CreateMessage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/MessageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/MessageList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/utils/PasswordField.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/utils/PasswordField.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MessageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/messages/MessageList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/auth.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/Profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/utils/Snackbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/utils/Snackbar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +27,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -53,6 +63,16 @@
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/messages" />
+      <recent name="$PROJECT_DIR$/src/components" />
+    </key>
+    <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/components/UserProfileIcon.tsx" />
+      <recent name="$PROJECT_DIR$/src/components/profile/ProfileInfoCard.tsx" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -62,7 +82,7 @@
       <option name="presentableId" value="Default" />
       <updated>1636876482182</updated>
       <workItem from="1636876483908" duration="14714000" />
-      <workItem from="1636981900615" duration="2255000" />
+      <workItem from="1636981900615" duration="3805000" />
     </task>
     <task id="LOCAL-00001" summary="fucking breaking changes">
       <created>1636898218497</created>
@@ -85,7 +105,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636899906919</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="styling fixes">
+      <created>1636986761254</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1636986761254</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -106,6 +133,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fucking breaking changes" />
     <MESSAGE value="run eslint" />
-    <option name="LAST_COMMIT_MESSAGE" value="run eslint" />
+    <MESSAGE value="styling fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="styling fixes" />
   </component>
 </project>
