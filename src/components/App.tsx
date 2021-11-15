@@ -1,4 +1,4 @@
-import Auth from './auth/Auth.tsx'
+import Auth from './auth/Auth'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import React, { ReactNode, useEffect, useMemo, useState } from 'react'
 import Home from './Home'
