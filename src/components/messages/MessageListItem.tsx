@@ -1,5 +1,5 @@
 import Message from '../../models/Message'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import User from '../../models/User'
 import getUser from '../../utils/getUser'
 import { ListItem, ListItemAvatar, ListItemText } from '@mui/material'
@@ -8,9 +8,14 @@ import Typography from '@mui/material/Typography'
 import Timestamp from '../utils/Timestamp'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
+import Markdown from 'markdown-it'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        avatar: {
+            alignSelf: 'flex-start',
+            paddingTop: theme.spacing(1),
+        },
         messageContainer: {
             display: 'flex',
             flexDirection: 'column',
@@ -21,7 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         timeContainer: {
             alignSelf: 'flex-end'
-        }
+        },
+        contentContainer: {
+            margin: `${theme.spacing( -0.9, 0)} !important`
+        },
     }),
 )
 
@@ -34,9 +42,24 @@ export default function MessageListItem({ message }: { message: Message }) {
         getUser(message.author).then((it) => setAuthor(it ?? null))
     }, [message.author])
 
+    const markdown = useMemo(() => {
+        return new Markdown('commonmark', {
+            html: false,
+            linkify: true,
+            xhtmlOut: true,
+            breaks: true,
+        }).disable(['image', 'heading'])
+    }, [])
+    const messageContent = markdown.render(message.content)
+    const contentContainerRef = useRef<HTMLSpanElement | null>(null)
+    useEffect(() => {
+        if (contentContainerRef.current !== null) {
+            contentContainerRef.current.innerHTML = messageContent
+        }
+    }, [messageContent])
     return (
         <ListItem key={message.id}>
-            <ListItemAvatar>
+            <ListItemAvatar className={classes.avatar}>
                 <Avatar
                     src={author?.profilePicture ?? ''}
                 />
@@ -51,9 +74,7 @@ export default function MessageListItem({ message }: { message: Message }) {
                                 </Typography>
                             </span>
                     </div>
-                    <Typography variant='body1'>
-                        {message.content}
-                    </Typography>
+                    <Typography variant='body1' ref={contentContainerRef} className={classes.contentContainer}/>
                 </section>
             </ListItemText>
         </ListItem>
