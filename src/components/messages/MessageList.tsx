@@ -56,11 +56,11 @@ export function MessageList({ room }: { room: Room }) {
 
     const items = loaded
         ? messages.map((message) => <MessageListItem message={message}/>).reverse()
-        : new Array(7).fill(<MessageListItemSkeleton/>)
+        : new Array(7).map((_, index) => <MessageListItemSkeleton key={index}/>)
     return (<>
         <List className={classes.root} aria-label='messages'>
             {items.length !== 0 ? items : <NoMessages />}
-            <div id='last' ref={lastRef}/>
+            <div id='last' key='last' ref={lastRef}/>
         </List>
     </>)
 }

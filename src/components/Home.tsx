@@ -94,9 +94,11 @@ const useStyles = makeStyles((theme: Theme) =>
             marginLeft: 0,
         },
         list: {
-            marginTop: 'auto',
             overflow: 'auto',
         },
+        pushBottom: {
+            marginTop: 'auto',
+        }
     }),
 )
 
@@ -120,11 +122,11 @@ export default function Home() {
 
     const content = selectedRoom ? (
         <>
-            <div className={classes.list}>
+            <div className={clsx(classes.list, classes.pushBottom)}>
                 <MessageList room={selectedRoom}/>
             </div>
 
-            <CreateMessage room={selectedRoom}/>
+            <CreateMessage room={selectedRoom} />
         </>
     ) : (
         <>
@@ -181,7 +183,7 @@ export default function Home() {
                             <RoomsListItem key={room.id} room={room} onClick={() => setSelectedIndex(index)}/>
                         ))
                     }
-                    <ListItem>
+                    <ListItem key='new-room-link'>
                         <Link component={RouterLink} to='/#new-room'>
                             <Button>
                                 New Room

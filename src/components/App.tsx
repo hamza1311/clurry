@@ -32,7 +32,6 @@ function App() {
 
 
     const privateRoute = (path: string, node: ReactNode) => {
-        console.log('fuck user', user)
         if (user === null) {
             return <Redirect to='/auth'/>
         } else {
