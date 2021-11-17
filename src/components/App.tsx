@@ -5,6 +5,7 @@ import Home from './Home'
 import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
 import { getAuth, User } from 'firebase/auth'
 import Profile from './profile/Profile'
+import RoomSettings from './rooms/RoomSettings'
 
 export const UserContext = React.createContext<User | null>(null)
 
@@ -51,10 +52,12 @@ function App() {
                 <Router>
                     <Switch>
                         <Route path='/auth'>
-                            <Auth/>
+                            <Auth />
                         </Route>
-                        {privateRoute('/profile', <Profile/>)}
-                        {privateRoute('/', <Home/>)}
+                        {privateRoute('/profile', <Profile />)}
+                        {privateRoute('/rooms/:id/settings', <RoomSettings />)}
+                        {privateRoute('/rooms/:id', <Home />)}
+                        {privateRoute('/', <Home />)}
 
                     </Switch>
                 </Router>

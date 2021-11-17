@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, makeStyles } from '@mui/styles'
 import Drawer from '@mui/material/Drawer'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
-import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -16,14 +15,13 @@ import { MessageList } from './messages/MessageList'
 import Room from '../models/Room'
 import CreateMessage, { CreateMessageSkeleton } from './messages/CreateMessage'
 import useRooms from '../utils/hooks/useRooms'
-import { Button, Dialog, DialogActions, DialogTitle, Link, TextField } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
-import { useHistory, useLocation } from 'react-router'
-import useUser from '../utils/hooks/useUser'
-import { addDoc, collection, getFirestore, Timestamp } from 'firebase/firestore'
+import { Button, Link } from '@mui/material'
+import { Link as RouterLink, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router'
 import { Theme } from '@mui/material/styles'
 import MessageListItemSkeleton from './messages/MessageListItemSkeleton'
-import UserProfileIcon from './UserProfileIcon'
+import NewRoomDialog from './rooms/NewRoomDialog'
+import AppToolbarContent from './AppToolbarContent'
 
 const drawerWidth = 240
 const appBarHeight = 69
@@ -47,12 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 easing: theme.transitions.easing.easeOut,
                 duration: theme.transitions.duration.enteringScreen,
             }),
-        },
-        roomName: {
-            padding: theme.spacing(0, 2),
-        },
-        separator: {
-            flex: '1 1 auto',
         },
         menuButton: {
             marginRight: theme.spacing(2),
@@ -102,23 +94,41 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
+
 export default function Home() {
     const classes = useStyles()
-    const [open, setOpen] = useState(false)
+    const [drawerOpen, setDrawerOpen] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(0)
     const rooms = useRooms()
+    const history = useHistory()
+
+    const { id = undefined } = useParams<{ id?: string }>()
+    useEffect(() => {
+        if (rooms.length !== 0) {
+            const index = rooms.findIndex((it) => it.id === id)
+            if (index === -1) {
+                history.replace(`/rooms/${rooms[0].id}`)
+            } else {
+                setSelectedIndex(index)
+            }
+        }
+    }, [rooms, id, history])
 
     const selectedRoom = rooms[selectedIndex]
 
     const handleDrawerOpen = () => {
-        setOpen(true)
+        setDrawerOpen(true)
 
     }
     const handleDrawerClose = () => {
-        setOpen(false)
+        setDrawerOpen(false)
     }
 
-    let skeleton = new Array(7).fill(<MessageListItemSkeleton />)
+    const selectRoom = (id: string) => {
+        history.replace(`/rooms/${id}`)
+    }
+
+    let skeleton = new Array(7).map((_, index) => <MessageListItemSkeleton key={index} />)
 
     const content = selectedRoom ? (
         <>
@@ -142,7 +152,7 @@ export default function Home() {
             <AppBar
                 position='fixed'
                 className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
+                    [classes.appBarShift]: drawerOpen,
                 })}
             >
                 <Toolbar>
@@ -151,22 +161,18 @@ export default function Home() {
                         aria-label='open drawer'
                         onClick={handleDrawerOpen}
                         edge='start'
-                        className={clsx(classes.menuButton, open && classes.hide)}
+                        className={clsx(classes.menuButton, drawerOpen && classes.hide)}
                     >
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant='h6' noWrap className={classes.roomName}>
-                        {selectedRoom?.name}
-                    </Typography>
-                    <div className={classes.separator}/>
-                    <UserProfileIcon/>
+                    {selectedRoom && <AppToolbarContent selectedRoom={selectedRoom}/>}
                 </Toolbar>
             </AppBar>
             <Drawer
                 className={classes.drawer}
                 variant='persistent'
                 anchor='left'
-                open={open}
+                open={drawerOpen}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
@@ -179,8 +185,8 @@ export default function Home() {
                 <Divider/>
                 <List>
                     {
-                        rooms.map((room, index) => (
-                            <RoomsListItem key={room.id} room={room} onClick={() => setSelectedIndex(index)}/>
+                        rooms.map((room) => (
+                            <RoomsListItem key={room.id} room={room} onClick={() => selectRoom(room.id)}/>
                         ))
                     }
                     <ListItem key='new-room-link'>
@@ -194,7 +200,7 @@ export default function Home() {
             </Drawer>
             <main
                 className={clsx(classes.content, {
-                    [classes.contentShift]: open,
+                    [classes.contentShift]: drawerOpen,
                 })}
             >
                 {content}
@@ -204,8 +210,7 @@ export default function Home() {
     )
 }
 
-
-interface RoomListItemProps {
+type RoomListItemProps = {
     room: Room
     onClick: () => void
 }
@@ -217,49 +222,3 @@ function RoomsListItem({ room, onClick }: RoomListItemProps) {
         </ListItem>
     )
 }
-
-function NewRoomDialog() {
-    const [name, setName] = useState('')
-    const location = useLocation()
-    const history = useHistory()
-    const user = useUser()
-
-    const [disabled, setDisabled] = useState(false)
-
-    const createRoom = async () => {
-        setDisabled(true)
-        const firestore = getFirestore()
-        const room = {
-            name,
-            members: [user?.uid ?? ''],
-            createTime: Timestamp.now()
-        }
-        await addDoc(collection(firestore, 'rooms'), room)
-        closeDialog()
-        setName('')
-        setDisabled(false)
-    }
-
-    const closeDialog = () => {
-        history.push('/') // todo current url without #hash
-    }
-
-    return (
-        <Dialog onClose={closeDialog} aria-labelledby='simple-dialog-title' open={location.hash === '#new-room'}>
-            <DialogTitle id='simple-dialog-title'>Create New Room</DialogTitle>
-
-            <TextField
-                value={name}
-                onChange={(it) => setName(it.target.value)}
-                disabled={disabled}
-            />
-
-            <DialogActions>
-                <Button disabled={disabled} onClick={closeDialog}>Close</Button>
-                <Button disabled={disabled} onClick={createRoom}>Save</Button>
-            </DialogActions>
-
-        </Dialog>
-    )
-}
-
