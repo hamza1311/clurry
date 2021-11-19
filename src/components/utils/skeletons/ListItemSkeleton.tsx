@@ -16,7 +16,7 @@ const useSkeletonStyles = makeStyles((theme: Theme) =>
     })
 )
 
-export default function MessageListItemSkeleton() {
+export default function ListItemSkeleton() {
     const classes = useSkeletonStyles()
 
     return <div className={classes.outerContainer}>

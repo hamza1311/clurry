@@ -37,7 +37,7 @@ export default function ResponsiveDrawer(props: Props) {
     }
 
     const drawer = (
-        <div>
+        <Box>
             <Toolbar />
             <Divider />
             <List>
@@ -53,7 +53,7 @@ export default function ResponsiveDrawer(props: Props) {
                     </ListItem>
                 ))}
             </List>
-        </div>
+        </Box>
     )
 
 
@@ -62,6 +62,9 @@ export default function ResponsiveDrawer(props: Props) {
             <AppBar
                 position='fixed'
                 sx={{
+                    /* Clipped
+                    zIndex: (theme) => theme.zIndex.drawer + 1
+                    */
                     width: { [mobileBreakpoint]: `calc(100% - ${drawerWidth}px)` },
                     ml: { [mobileBreakpoint]: `${drawerWidth}px` },
                 }}

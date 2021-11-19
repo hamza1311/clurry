@@ -4,5 +4,6 @@ export default interface Room {
     name: string
     createTime: Timestamp
     members: string[]
-    id: string,
+    id: string
+    icon?: string
 }

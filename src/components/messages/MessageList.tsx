@@ -5,7 +5,7 @@ import { Theme } from '@mui/material/styles'
 import Room from '../../models/Room'
 import Message from '../../models/Message'
 import { collection, getFirestore, onSnapshot, query, orderBy } from 'firebase/firestore'
-import MessageListItemSkeleton from './MessageListItemSkeleton'
+import ListItemSkeleton from '../utils/skeletons/ListItemSkeleton'
 import MessageListItem from './MessageListItem'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,7 +56,7 @@ export function MessageList({ room }: { room: Room }) {
 
     const items = loaded
         ? messages.map((message) => <MessageListItem message={message}/>).reverse()
-        : new Array(7).map((_, index) => <MessageListItemSkeleton key={index}/>)
+        : new Array(7).map((_, index) => <ListItemSkeleton key={index}/>)
     return (<>
         <List className={classes.root} aria-label='messages'>
             {items.length !== 0 ? items : <NoMessages />}

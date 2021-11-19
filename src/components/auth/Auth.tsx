@@ -41,7 +41,7 @@ export default function Auth() {
                             <Tab label='Sign Up'/>
                         </Tabs>
                     </AppBar>
-                    <Box p={3}>
+                    <Box>
                         <SignInOrUp inOrUp={value === 0 ? 'in' : 'up'}/>
                     </Box>
                 </Card>

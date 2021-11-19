@@ -1,9 +1,9 @@
-import { Avatar, Button, CircularProgress, IconButton, TextField, Tooltip, Typography, } from '@mui/material'
+import { Button, CircularProgress, IconButton, TextField, Tooltip, Typography } from '@mui/material'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Edit, Save, Warning } from '@mui/icons-material'
 import React, { useEffect, useState } from 'react'
 import ChangePassword from './ChangePassword'
-import UpdatePhotoButton from './UpdatePhotoButton'
+import UpdateImageCard from '../utils/cards/UpdateImageCard'
 import useUser from '../../utils/hooks/useUser'
 import getUser from '../../utils/getUser'
 import User from '../../models/User'
@@ -11,7 +11,7 @@ import LoadingIndicator from '../utils/LoadingIndicator'
 import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
 import { sendEmailVerification, updateEmail } from 'firebase/auth'
 import { Theme } from '@mui/material/styles'
-import { ProfileInfoCard } from './ProfileInfoCard'
+import ProfileInfoCard from '../utils/cards/CardWrapper'
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
@@ -103,9 +103,9 @@ export default function Profile() {
 
     useEffect(() => {
         if (user !== null) {
-            getUser(user?.uid ?? '').then((it) => setFetchedUser(it ?? null))
+            getUser(user.uid).then((it) => setFetchedUser(it ?? null))
         }
-    })
+    }, [user])
 
     if (user === null || fetchedUser === null) {
         return <LoadingIndicator isVisible={true}/>
@@ -139,12 +139,12 @@ export default function Profile() {
 
     return (
         <main className={classes.root}>
-            <ProfileInfoCard>
-                <Avatar src={fetchedUser?.profilePicture ?? undefined} alt='pfp'/>
-                <Typography variant='h5' component='p'>{user?.displayName}</Typography>
-
-                <UpdatePhotoButton/>
-            </ProfileInfoCard>
+            <UpdateImageCard
+                imgSrc={fetchedUser?.profilePicture ?? undefined}
+                alt='pfp'
+                removePhoto={() => console.log('TODO')}
+                updatePhoto={() => console.log('TODO')}
+            />
 
             <ProfileInfoCard>
                 <article className={classes.cardContentInner}>

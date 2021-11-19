@@ -21,7 +21,7 @@ const formatTime = (date: Date): string => {
     } else if (isDateYesterday) {
         out += 'Yesterday'
     } else if (isCurrentWeek) {
-        out += format(date, 'E..EEE')
+        out += format(date, 'EEE')
     }
 
     if (!isCurrentWeek && !isDateYesterday) {

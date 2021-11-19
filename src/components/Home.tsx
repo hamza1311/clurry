@@ -19,7 +19,7 @@ import { Button, Link } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import { useHistory } from 'react-router'
 import { Theme } from '@mui/material/styles'
-import MessageListItemSkeleton from './messages/MessageListItemSkeleton'
+import ListItemSkeleton from './utils/skeletons/ListItemSkeleton'
 import NewRoomDialog from './rooms/NewRoomDialog'
 import AppToolbarContent from './AppToolbarContent'
 
@@ -128,7 +128,7 @@ export default function Home() {
         history.replace(`/rooms/${id}`)
     }
 
-    let skeleton = new Array(7).map((_, index) => <MessageListItemSkeleton key={index} />)
+    let skeleton = new Array(7).map((_, index) => <ListItemSkeleton key={index} />)
 
     const content = selectedRoom ? (
         <>

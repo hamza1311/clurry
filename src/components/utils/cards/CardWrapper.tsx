@@ -1,5 +1,5 @@
-import { Card, CardContent } from '@mui/material'
 import React, { PropsWithChildren } from 'react'
+import { Card, CardContent } from '@mui/material'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 
@@ -17,12 +17,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         gap: theme.spacing(1)
     },
 }))
-export const ProfileInfoCard = ({ children }: PropsWithChildren<{}>) => {
+
+const CardWrapper = (props: PropsWithChildren<{}>) => {
     const classes = useStyles()
 
-    return <Card className={classes.card}>
-        <CardContent className={classes.cardContent}>
-            {children}
-        </CardContent>
-    </Card>
+    return (
+        <Card className={classes.card}>
+            <CardContent className={classes.cardContent}>
+                {props.children}
+            </CardContent>
+        </Card>
+    )
 }
+
+export default CardWrapper

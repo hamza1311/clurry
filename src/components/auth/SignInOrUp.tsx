@@ -7,6 +7,8 @@ import TextField from '@mui/material/TextField'
 import PasswordField from '../utils/PasswordField'
 import { Button, Collapse } from '@mui/material'
 import LoadingIndicator from '../utils/LoadingIndicator'
+import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
+import User from '../../models/User'
 
 type SigningInOrUp = 'in' | 'up'
 
@@ -15,9 +17,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         display: 'flex',
         flexDirection: 'column',
         gap: theme.spacing(4),
-        padding: theme.spacing(3),
+        padding: theme.spacing(5),
     },
-    confirmPasswordField: {
+    fullWidthField: {
         width: 'inherit'
     },
     signinOrUpButton: {
@@ -29,11 +31,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [displayName, setDisplayName] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [signingUp, setSigningUp] = useState(false)
 
     const classes = useStyles()
     const router = useHistory()
+    const firestore = getFirestore()
 
     const auth = getAuth()
 
@@ -48,7 +52,14 @@ export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
     const signUp = async () => {
         setSigningUp(true)
         if (password === confirmPassword) {
-            await createUserWithEmailAndPassword(auth, email, password)
+            const { user } = await createUserWithEmailAndPassword(auth, email, password)
+            const docRef = doc(collection(firestore, 'users'), user.uid)
+            const userDoc = {
+                displayName,
+                email: user.email,
+                profilePicture: null
+            }
+            await setDoc(docRef, userDoc)
             setSigningUp(false)
             router.push('/')
         } else {
@@ -58,6 +69,17 @@ export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
 
     const form = (
         <form className={classes.form} noValidate autoComplete='off'>
+            <Collapse in={inOrUp === 'up'} timeout='auto' unmountOnExit>
+                <TextField
+                    label='Display name'
+                    variant='standard'
+                    type='text'
+                    className={classes.fullWidthField}
+                    disabled={signingUp}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                />
+            </Collapse>
+
             <TextField
                 label='Email'
                 variant='standard'
@@ -78,7 +100,7 @@ export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
                     disabled={signingUp}
                     value={confirmPassword}
                     label='Confirm Password'
-                    className={classes.confirmPasswordField}
+                    className={classes.fullWidthField}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />
             </Collapse>
