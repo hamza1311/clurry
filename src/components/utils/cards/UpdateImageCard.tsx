@@ -60,13 +60,13 @@ function UpdatePhotoButton(props: UpdatePhotoButtonProps) {
 }
 
 
-type UpdateImageCardProps = {
+type UpdateImageCardProps = PropsWithChildren<{
     imgSrc?: string
     alt: string,
     title?: string
-} & UpdatePhotoButtonProps
+} & UpdatePhotoButtonProps>
 
-const UpdateImageCard = ({ imgSrc, alt, title, children, updatePhoto, removePhoto }: PropsWithChildren<UpdateImageCardProps>) => {
+const UpdateImageCard = ({ imgSrc, alt, title, children, updatePhoto, removePhoto }: UpdateImageCardProps) => {
     return (
         <CardWrapper>
             <Avatar src={imgSrc} alt={alt}>{children}</Avatar>

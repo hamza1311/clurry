@@ -6,6 +6,7 @@ import getUser from '../utils/getUser'
 import { useHistory } from 'react-router'
 import IconButton from '@mui/material/IconButton'
 import { Avatar, Menu, MenuItem } from '@mui/material'
+import useUserProfilePicture from '../utils/hooks/useUserProfilePicture'
 
 export default function UserProfileIcon() {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -39,7 +40,7 @@ export default function UserProfileIcon() {
     }
 
 
-    const pfp = user?.profilePicture ?? undefined
+    const pfp = useUserProfilePicture(user)
 
     return (
         <>

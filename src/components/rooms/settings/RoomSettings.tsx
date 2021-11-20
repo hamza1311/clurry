@@ -13,6 +13,7 @@ import UpdateImageCard from '../../utils/cards/UpdateImageCard'
 import Typography from '@mui/material/Typography'
 import useRoom from '../../../utils/hooks/useRoom'
 import RoomMembersList from './RoomMembersList'
+import useRoomIcon from '../../../utils/hooks/useRoomIcon'
 
 const drawerItems = [
     {
@@ -43,6 +44,7 @@ export default function RoomSettings() {
     const history = useHistory()
 
     const [room, loading] = useRoom(roomId)
+    const icon = useRoomIcon(room?.id)
 
     if (loading) {
         return <>Loading</>
@@ -77,7 +79,7 @@ export default function RoomSettings() {
             content = (
                 <Box className={classes.generalSettingsContainer}>
                     <UpdateImageCard
-                        imgSrc={room.icon ?? undefined}
+                        imgSrc={icon}
                         alt='room icon'
                         removePhoto={removeRoomIcon}
                         updatePhoto={updateRoomIcon}

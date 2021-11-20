@@ -14,6 +14,7 @@ import { Theme } from '@mui/material/styles'
 import ProfileInfoCard from '../utils/cards/CardWrapper'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Link as RouterLink } from 'react-router-dom'
+import useUserProfilePicture from '../../utils/hooks/useUserProfilePicture'
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
@@ -109,6 +110,8 @@ export default function Profile() {
         }
     }, [user])
 
+    const profilePictureUrl = useUserProfilePicture(fetchedUser)
+
     if (user === null || fetchedUser === null) {
         return <LoadingIndicator isVisible={true}/>
     }
@@ -147,7 +150,7 @@ export default function Profile() {
             </Toolbar>
         <main className={classes.root}>
             <UpdateImageCard
-                imgSrc={fetchedUser?.profilePicture ?? undefined}
+                imgSrc={profilePictureUrl}
                 alt='pfp'
                 removePhoto={() => console.log('TODO')}
                 updatePhoto={() => console.log('TODO')}

@@ -12,7 +12,6 @@ const getUser = async (userId: string) => {
     const user: User = {
         id: userId,
         displayName: data.displayName,
-        profilePicture: data.profilePicture ?? null,
         email: data.email
     }
     return user

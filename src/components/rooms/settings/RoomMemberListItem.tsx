@@ -4,6 +4,7 @@ import getUser from '../../../utils/getUser'
 import ListItemSkeleton from '../../utils/skeletons/ListItemSkeleton'
 import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 import * as React from 'react'
+import useUserProfilePicture from '../../../utils/hooks/useUserProfilePicture'
 
 const RoomMemberListItem = ({ member: memberId }: { member: string }) => {
     const [user, setUser] = useState<User | null>(null)
@@ -14,6 +15,8 @@ const RoomMemberListItem = ({ member: memberId }: { member: string }) => {
         })
     }, [memberId])
 
+    const pfp = useUserProfilePicture(user)
+
     if (user === null) {
         return <ListItemSkeleton/>
     }
@@ -21,7 +24,7 @@ const RoomMemberListItem = ({ member: memberId }: { member: string }) => {
     return (
         <ListItem>
             <ListItemAvatar>
-                <Avatar src={user.profilePicture ?? undefined} alt={`${user.displayName}'s avatar`}/>
+                <Avatar src={pfp} alt={`${user.displayName}'s avatar`}/>
             </ListItemAvatar>
             <ListItemText>{user.displayName}</ListItemText>
         </ListItem>

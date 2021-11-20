@@ -9,6 +9,7 @@ import Timestamp from '../utils/Timestamp'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import Markdown from 'markdown-it'
+import useUserProfilePicture from '../../utils/hooks/useUserProfilePicture'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -57,11 +58,14 @@ export default function MessageListItem({ message }: { message: Message }) {
             contentContainerRef.current.innerHTML = messageContent
         }
     }, [messageContent])
+
+    const pfp = useUserProfilePicture(author)
+
     return (
         <ListItem key={message.id}>
             <ListItemAvatar className={classes.avatar}>
                 <Avatar
-                    src={author?.profilePicture ?? ''}
+                    src={pfp}
                 />
             </ListItemAvatar>
             <ListItemText disableTypography={true}>

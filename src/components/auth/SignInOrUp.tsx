@@ -56,7 +56,6 @@ export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
             const userDoc = {
                 displayName,
                 email: user.email,
-                profilePicture: null
             }
             await updateProfile(user, { displayName })
             await setDoc(docRef, userDoc)
