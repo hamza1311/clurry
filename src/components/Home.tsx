@@ -13,7 +13,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { MessageList } from './messages/MessageList'
 import Room from '../models/Room'
-import CreateMessage, { CreateMessageSkeleton } from './messages/CreateMessage'
+import CreateMessage from './messages/CreateMessage'
 import useRooms from '../utils/hooks/useRooms'
 import { Button, Link } from '@mui/material'
 import { Link as RouterLink, useParams } from 'react-router-dom'
@@ -22,6 +22,8 @@ import { Theme } from '@mui/material/styles'
 import ListItemSkeleton from './utils/skeletons/ListItemSkeleton'
 import NewRoomDialog from './rooms/NewRoomDialog'
 import AppToolbarContent from './AppToolbarContent'
+import CreateMessageSkeleton from './utils/skeletons/CreateMessageSkeleton'
+import Typography from '@mui/material/Typography'
 
 const drawerWidth = 240
 const appBarHeight = 69
@@ -94,7 +96,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
-
 export default function Home() {
     const classes = useStyles()
     const [drawerOpen, setDrawerOpen] = useState(false)
@@ -165,7 +166,13 @@ export default function Home() {
                     >
                         <MenuIcon/>
                     </IconButton>
-                    {selectedRoom && <AppToolbarContent selectedRoom={selectedRoom}/>}
+                    {selectedRoom && <AppToolbarContent>
+                        <Typography variant='h6' noWrap>
+                            <Link component={RouterLink} to={`/rooms/${selectedRoom.id}/settings`}>
+                                {selectedRoom.name}
+                            </Link>
+                        </Typography>
+                    </AppToolbarContent>}
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -190,7 +197,7 @@ export default function Home() {
                         ))
                     }
                     <ListItem key='new-room-link'>
-                        <Link component={RouterLink} to='/#new-room'>
+                        <Link component={RouterLink} to='#new-room'>
                             <Button>
                                 New Room
                             </Button>

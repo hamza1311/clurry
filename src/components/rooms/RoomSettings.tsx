@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Room from '../../models/Room'
-import { collection, doc, getDoc, getFirestore } from 'firebase/firestore'
+import { collection, doc, getFirestore, updateDoc, arrayUnion, query, where, getDocs } from 'firebase/firestore'
 import ResponsiveDrawer from '../utils/ResponsiveDrawer'
 import * as React from 'react'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -12,13 +12,12 @@ import {
     Avatar,
     Box,
     Button,
-    Collapse,
-    IconButton,
+    Collapse, FormControl,
+    IconButton, Input, InputAdornment, InputLabel,
     List,
     ListItem,
-    ListItemAvatar,
+    ListItemAvatar, ListItemButton,
     ListItemText,
-    TextField
 } from '@mui/material'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
@@ -26,35 +25,12 @@ import { useHistory } from 'react-router'
 import { EditableInfoCard } from '../utils/cards/EditableInfoCard'
 import UpdateImageCard from '../utils/cards/UpdateImageCard'
 import { TransitionGroup } from 'react-transition-group'
-import SeparatorBox from '../utils/SeparatorBox'
 import FlexBox from '../utils/FlexBox'
 import getUser from '../../utils/getUser'
 import ListItemSkeleton from '../utils/skeletons/ListItemSkeleton'
 import User from '../../models/User'
-
-const useRoom = (id: string): [Room | null, boolean] => {
-    const [room, setRoom] = useState<Room | null>(null)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const firestore = getFirestore()
-        getDoc(doc(collection(firestore, 'rooms'), id)).then((doc) => {
-            const data = doc.data()
-            if (data !== undefined) {
-                const output: Room = {
-                    id: doc.id,
-                    createTime: data.createTime,
-                    members: data.members,
-                    name: data.name,
-                }
-                setRoom(output)
-            }
-            setLoading(false)
-        })
-    }, [id])
-
-    return [room, loading]
-}
+import Typography from '@mui/material/Typography'
+import useRoom from '../../utils/hooks/useRoom'
 
 const drawerItems = [
     {
@@ -78,38 +54,79 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 )
 
-const AddUserCard = () => {
+const AddUserItem = ({ room }: { room: Room }) => {
     const [isEditing, setIsEditing] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const memberEmailRef = useRef<{ value: string }>()
+
+    const firestore = getFirestore()
+
+    const addMember = async () => {
+        setIsDisabled(true)
+        const roomDocument = doc(firestore, 'rooms', room.id)
+        const userQuery = query(collection(firestore, 'users'), where('email', '==', memberEmailRef.current!!.value))
+        const userDocs = await getDocs(userQuery)
+        if (userDocs.empty) {
+            // TODO handle this case properly
+            alert('no user with this email found')
+        } else {
+            // this `forEach` is fine because only one user can be registered with one email
+            userDocs.forEach((user) => {
+                updateDoc(roomDocument, {
+                    members: arrayUnion(user.id)
+                }).catch((e) => console.error('failed to add member', e))
+            })
+        }
+        setIsEditing(false)
+        setIsDisabled(false)
+    }
     return (
-        <TransitionGroup style={{ width: '100%' }}>
-            {!isEditing && <Collapse unmountOnExit>
-                <Button onClick={() => setIsEditing(true)}>
-                    <AddIcon/>
-                    Add Member
-                </Button>
-            </Collapse>}
-            {isEditing && <Collapse unmountOnExit>
-                <FlexBox>
-                    <TextField
-                        label='email'
-                    />
-                    <SeparatorBox/>
-                    <IconButton onClick={() => setIsEditing(false)}>
-                        <CheckIcon/>
-                    </IconButton>
-                </FlexBox>
-            </Collapse>}
-        </TransitionGroup>
+        <ListItem>
+            <TransitionGroup style={{ width: '100%' }}>
+                {!isEditing && <Collapse unmountOnExit>
+                    <ListItemButton disabled={isDisabled} component={Button} onClick={() => setIsEditing(true)}
+                                    sx={{ width: '100%' }}>
+                        <AddIcon/>
+                        Add Member
+                    </ListItemButton>
+                </Collapse>}
+                {isEditing && <Collapse unmountOnExit>
+                    <FlexBox>
+                        <FormControl variant='standard' sx={{ width: '100%' }} disabled={isDisabled}>
+                            <InputLabel htmlFor='member-email'>Email</InputLabel>
+                            <Input
+                                id='member-email'
+                                inputRef={memberEmailRef}
+                                endAdornment={
+                                    <InputAdornment position='end'>
+                                        <IconButton
+                                            onClick={() => addMember()}
+                                            onMouseDown={(e) => e.preventDefault()}
+                                        >
+                                            <CheckIcon/>
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </FlexBox>
+                </Collapse>}
+            </TransitionGroup>
+        </ListItem>
     )
 }
 
-const RoomMembersList = ({ room } : { room: Room }) => {
+const RoomMembersList = ({ room }: { room: Room }) => {
     return (
         <List sx={{ width: (theme) => ({ [theme.breakpoints.up('sm')]: '40%' }) }}>
-            <ListItem key='add-user'>
-                <AddUserCard/>
-            </ListItem>
-            { room.members.map((member) => <RoomMembersListItem member={member} key={member} /> )}
+            <TransitionGroup>
+                <AddUserItem key='add-user' room={room}/>
+                {room.members.map((member) => (
+                    <Collapse key={member}>
+                        <RoomMembersListItem member={member}/>
+                    </Collapse>
+                ))}
+            </TransitionGroup>
         </List>
     )
 }
@@ -124,13 +141,13 @@ const RoomMembersListItem = ({ member: memberId }: { member: string }) => {
     }, [memberId])
 
     if (user === null) {
-        return <ListItemSkeleton />
+        return <ListItemSkeleton/>
     }
 
     return (
         <ListItem>
             <ListItemAvatar>
-                <Avatar src={user.profilePicture ?? undefined} alt={`${user.displayName}'s avatar`} />
+                <Avatar src={user.profilePicture ?? undefined} alt={`${user.displayName}'s avatar`}/>
             </ListItemAvatar>
             <ListItemText>{user.displayName}</ListItemText>
         </ListItem>
@@ -161,7 +178,11 @@ export default function RoomSettings() {
         <IconButton className={classes.backIcon} onClick={goHome}>
             <ArrowBackIcon/>
         </IconButton>
-        <AppToolbarContent selectedRoom={room}/>
+        <AppToolbarContent>
+            <Typography variant='h6' noWrap>
+                {room.name}
+            </Typography>
+        </AppToolbarContent>
     </>
 
     let content
@@ -181,7 +202,7 @@ export default function RoomSettings() {
             break
         case 1:
             content = (
-                <RoomMembersList room={room} />
+                <RoomMembersList room={room}/>
             )
             break
     }

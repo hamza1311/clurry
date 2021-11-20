@@ -2,13 +2,12 @@ import { createStyles, makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router'
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import TextField from '@mui/material/TextField'
 import PasswordField from '../utils/PasswordField'
 import { Button, Collapse } from '@mui/material'
 import LoadingIndicator from '../utils/LoadingIndicator'
 import { collection, doc, getFirestore, setDoc } from 'firebase/firestore'
-import User from '../../models/User'
 
 type SigningInOrUp = 'in' | 'up'
 
@@ -59,6 +58,7 @@ export default function SignInOrUp({ inOrUp }: { inOrUp: SigningInOrUp }) {
                 email: user.email,
                 profilePicture: null
             }
+            await updateProfile(user, { displayName })
             await setDoc(docRef, userDoc)
             setSigningUp(false)
             router.push('/')

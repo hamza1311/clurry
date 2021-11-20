@@ -1,4 +1,4 @@
-import { Button, CircularProgress, IconButton, TextField, Tooltip, Typography } from '@mui/material'
+import { Button, CircularProgress, IconButton, TextField, Toolbar, Tooltip, Typography } from '@mui/material'
 import { createStyles, makeStyles } from '@mui/styles'
 import { Edit, Save, Warning } from '@mui/icons-material'
 import React, { useEffect, useState } from 'react'
@@ -12,6 +12,8 @@ import { collection, doc, getFirestore, updateDoc } from 'firebase/firestore'
 import { sendEmailVerification, updateEmail } from 'firebase/auth'
 import { Theme } from '@mui/material/styles'
 import ProfileInfoCard from '../utils/cards/CardWrapper'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { Link as RouterLink } from 'react-router-dom'
 
 const useCardActionsStyles = makeStyles(({
     cardContentRight: {
@@ -137,7 +139,12 @@ export default function Profile() {
         await sendEmailVerification(user)
     }
 
-    return (
+    return (<>
+            <Toolbar>
+                <IconButton component={RouterLink} to='/'>
+                    <ArrowBackIcon/>
+                </IconButton>
+            </Toolbar>
         <main className={classes.root}>
             <UpdateImageCard
                 imgSrc={fetchedUser?.profilePicture ?? undefined}
@@ -206,5 +213,6 @@ export default function Profile() {
 
             <ChangePassword dialogOpen={passwordDialogOpen} setDialogOpen={setPasswordDialogOpen}/>
         </main>
+        </>
     )
 }

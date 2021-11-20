@@ -8,7 +8,7 @@ import { addDoc, collection, getFirestore, Timestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { Theme } from '@mui/material/styles'
 
-const useInputStyles = makeStyles((theme: Theme) => createStyles({
+export const useInputStyles = makeStyles((theme: Theme) => createStyles({
     container: {
         alignSelf: 'flex-start',
         margin: theme.spacing(2, 0, 3, 0),
@@ -72,15 +72,3 @@ export default function CreateMessage({ room }: { room: Room }) {
     )
 }
 
-export function CreateMessageSkeleton() {
-    const classes = useInputStyles()
-
-    return (
-        <div className={classes.container}>
-            <TextField multiline maxRows={5} className={classes.input} disabled={true} />
-            <IconButton disabled={true}>
-                <SendIcon/>
-            </IconButton>
-        </div>
-    )
-}
