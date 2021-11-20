@@ -5,7 +5,7 @@ import Home from './Home'
 import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
 import { getAuth, User } from 'firebase/auth'
 import Profile from './profile/Profile'
-import RoomSettings from './rooms/RoomSettings'
+import RoomSettings from './rooms/settings/RoomSettings'
 
 export const UserContext = React.createContext<User | null>(null)
 
